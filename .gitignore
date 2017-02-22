@@ -1,2 +1,7 @@
 *.log
+*.pyc
+BotIDs.py
 Rethinkdb/rethinkdb_data
+rethinkdb.ink
+.idea
+__pycache__
