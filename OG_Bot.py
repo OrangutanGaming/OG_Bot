@@ -8,9 +8,9 @@ import time
 import rethinkdb as r
 import os
 
-r.connect("localhost", 28015).repl()
+#r.connect("localhost", 28015).repl()
 
-bot = commands.Bot(command_prefix='?', description="Orangutan Gaming's bot")
+bot = commands.Bot(command_prefix="?", description="Orangutan Gaming's bot")
 
 logger = logging.getLogger("discord")
 logger.setLevel(logging.DEBUG)
@@ -27,6 +27,7 @@ async def on_ready():
     print(bot.user.id)
     print('------')
     print("Playing", gamename)
+    print(BotIDs.URL)
 
 bot.remove_command("help")
 @bot.command()
