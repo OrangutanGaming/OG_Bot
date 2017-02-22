@@ -6,14 +6,15 @@ import logging
 import datetime
 import time
 import rethinkdb as r
+import os
 
 r.connect("localhost", 28015).repl()
 
 bot = commands.Bot(command_prefix='?', description="Orangutan Gaming's bot")
 
-logger = logging.getLogger('discord')
+logger = logging.getLogger("discord")
 logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
@@ -27,78 +28,27 @@ async def on_ready():
     print('------')
     print("Playing", gamename)
 
-
-@bot.command(pass_context=True)
-async def roles_change(ctx, roles: discord.Role):
-    bot.edit_role(ctx.message.server, roles)#, permissions=administrator)
-
+bot.remove_command("help")
 @bot.command()
-async def join():
-    options=["This bot is currently a work in progress. It is not public yet. If you're interested in "
-                  "helping with testing or have any ideas, PM OGaming#7135",
-             "Anyone with the permission `Manage Server` can add me to a server using the following link: " + BotIDs.URL]
-    await bot.say(options[1])
-
-#@bot.command()
-#async def joined(member: discord.Member):
-#    await bot.say("{0.name} joined in {0.joined_at}".format(member))
-
-#@bot.command()
-#async def help():
-#    await bot.say("OG_Bot by Orangutan Gaming `(OGaming#7135)`"
-#                  "/n`msgcount` or `mcount`: Will ")
-
-@bot.command(pass_context=True, aliases=["mcount"])
-async def msgcount(ctx, user: discord.Member = None, channel: discord.Channel = None):
-    counter = 0
-    tmp = await bot.say("Counting messages...")
-    if not user:
-        user = ctx.message.author
-    if not channel:
-        channel = ctx.message.channel
-    async for log in bot.logs_from(channel, limit=100, before=ctx.message):
-        if log.author == user:
-            counter += 1
-    bot.delete_message(ctx.message)
-    await bot.edit_message(tmp, "{} has {} messages in {}.".format(user.mention, counter, channel.mention))
-
-@bot.command(pass_context=True, aliases=["amcount"])
-async def amsgcount(ctx, user = None, channel: discord.Channel = None):
-    counter = 0
-    tmp = await bot.say("Counting messages...")
-    if not channel:
-        channel = ctx.message.channel
-    async for log in bot.logs_from(channel, before=ctx.message):
-        counter += 1
-    bot.delete_message(ctx.message)
-    if counter == 100:
-        await bot.edit_message(tmp, "There are at least {} messages in {}.".format(counter, channel.mention))
-    elif counter <= 99:
-        await bot.edit_message(tmp, "There are {} messages in {}.".format(counter, channel.mention))
-    else:
-        await bot.edit_message(tmp, "Counter Bug")
-
-@bot.command(pass_context=True, aliases=["recents", "last"])
-async def recent(ctx, user: discord.Member = None, channel: discord.Channel = None):
-    if not channel:
-        channel = ctx.message.channel
-    if not user:
-        user = ctx.message.author
-    quote = None
-    async for message in bot.logs_from(channel, before=ctx.message, limit=100):
-        if message.author == user:
-            quote = message
-            embed = discord.Embed(description=quote.content)
-            embed.set_author(name=quote.author.name, icon_url=quote.author.avatar_url)
-            embed.timestamp = quote.timestamp
-            await bot.say(embed=embed)
-            return
-        if not quote:
-            continue
-
-    embed = discord.Embed(description="No message found")
-    await bot.say(embed=embed)
-    return
+async def help():
+    await bot.say("OG_Bot by Orangutan Gaming `(OGaming#7135)`"
+                  "\n`<Mandatory Argument>`, `(Optional Argument)` `Alias 1`/`Alias 2` [Permission Needed]"
+                  "\n`help`: Gives this command"
+                  "\n`join`: Shows information on how to add me to your server"
+                  "\n`msgcount`/`mcount` (user) (channel): Count how many messages in the channel the command was used "
+                  "in or the channel given by the user given. If no user is given, it will use the person who uses the "
+                  "command"
+                  "\n`amsgcount`/`amcount` (channel): Count how many messages in the channel given. If no channel was"
+                  "given, will use the channel the command was used in"
+                  "\n`recent`/`recents`/`last` (user) (channel): Quotes the most recent message from the user and channel given."
+                  "If no user is given, it will use the user using the command and if no channel is given it will use"
+                  "the channel the command was used in."
+                  "\n`userinfo`/`info` (user) gets the userinfo of the user given. If no user is given, it will use the"
+                  "user using the command"
+                  "\n`botclear` (amount) [Manage Messages]: Deletes the amount of messages given by me in the current "
+                  "channel. Default: 100"
+                  "\n`clear`/`del`/`delete`/`wipe` (amount): Deletes the amount of messages given in the current "
+                  "channel. Default: 100")
 
 @bot.command(pass_context=True)
 async def dev(ctx):
@@ -142,7 +92,78 @@ async def pvp(*args : str, role: discord.Role = None): #args are all the names o
     else:
         bot.create_role()
 
-@bot.command(pass_context=True)
+#@bot.command(pass_context=True)
+#async def roles_change(ctx, roles: discord.Role):
+#    bot.edit_role(ctx.message.server, roles)#, permissions=administrator)
+
+@bot.command()
+async def join():
+    options=["This bot is currently a work in progress. It is not public yet. If you're interested in "
+                  "helping with testing or have any ideas, PM OGaming#7135",
+             "Anyone with the permission `Manage Server` can add me to a server using the following link: " + BotIDs.URL]
+    await bot.say(options[1])
+
+#@bot.command()
+#async def joined(member: discord.Member):
+#    await bot.say("{0.name} joined in {0.joined_at}".format(member))
+
+@bot.command(pass_context=True, aliases=["mcount"])
+async def msgcount(ctx, user: discord.Member = None, channel: discord.Channel = None):
+    counter = 0
+    tmp = await bot.say("Counting messages...")
+    if not user:
+        user = ctx.message.author
+    if not channel:
+        channel = ctx.message.channel
+    async for log in bot.logs_from(channel, limit=100, before=ctx.message):
+        if log.author == user:
+            counter += 1
+    bot.delete_message(ctx.message)
+    await bot.edit_message(tmp, "{} has {} messages in {}.".format(user.mention, counter, channel.mention))
+
+@bot.command(pass_context=True, aliases=["amcount"])
+async def amsgcount(ctx, channel: discord.Channel = None):
+    counter = 0
+    tmp = await bot.say("Counting messages...")
+    if not channel:
+        channel = ctx.message.channel
+    async for log in bot.logs_from(channel, before=ctx.message):
+        counter += 1
+    bot.delete_message(ctx.message)
+    if counter == 100:
+        await bot.edit_message(tmp, "There are at least {} messages in {}.".format(counter, channel.mention))
+    elif counter <= 99:
+        await bot.edit_message(tmp, "There are {} messages in {}.".format(counter, channel.mention))
+    else:
+        await bot.edit_message(tmp, "Counter Bug")
+
+@bot.command(pass_context=True, aliases=["recents", "last"])
+async def recent(ctx, user: discord.Member = None, channel: discord.Channel = None):
+    if not channel:
+        channel = ctx.message.channel
+    if not user:
+        user = ctx.message.author
+    quote = None
+    async for message in bot.logs_from(channel, before=ctx.message, limit=100):
+        if message.author == user:
+            quote = message
+            embed = discord.Embed(description=quote.content)
+            embed.set_author(name=quote.author.name, icon_url=quote.author.avatar_url)
+            embed.timestamp = quote.timestamp
+            await bot.delete_message(ctx.message)
+            await bot.say(embed=embed)
+            return
+        if not quote:
+            continue
+
+    embed = discord.Embed(description="No message found")
+    await bot.say(embed=embed)
+    await bot.delete_message(ctx.message)
+    return
+
+
+
+@bot.command(pass_context=True, aliases=["info"])
 async def userinfo(ctx, member: discord.Member = None):
     if not member:
         member = ctx.message.author
@@ -162,40 +183,46 @@ async def userinfo(ctx, member: discord.Member = None):
     await bot.say(embed=embed)
 
 @bot.command(pass_context=True)
-#@commands.has_permissions(manage_messages=True)
-async def botclear(ctx):
-    user = ctx.message.author
-    if user has perms
+@commands.has_permissions(manage_messages=True)
+async def botclear(ctx, amount=100):
+    #user = ctx.message.author
+    #if ctx.message.channel.permissions_for():
             #discord.Permissions(ctx.message.author, manage_messages):
 
-        def check():
-            def is_me(m):
-                return m.author == bot.user
+    def check():
+        def is_me(msg):
+            return msg.author == bot.user
 
-        try:
-            deleted = await bot.purge_from(ctx.message.channel, check=check())
-            await bot.say("Deleted {} message(s)".format(len(deleted)))
-        except discord.Forbidden as error:
-            await bot.say("{} does not have permissions".format(bot.user.name))
+    try:
+        deleted = await bot.purge_from(ctx.message.channel, check=check(), limit=amount)
+        count = len(deleted)
+        if count == 1:
+            tmp = await bot.say("Deleted {} message".format(count))
+        else:
+            tmp = await bot.say("Deleted {} messages".format(count))
+        await asyncio.sleep(3)
+        await bot.delete_messages([tmp, ctx.message])
+    except discord.Forbidden as error:
+        await bot.say("{} does not have permissions".format(bot.user.name))
 
-    else:
-        await bot.say("You must have the `Manage Messages` permission in order to run that command")
+    #else:
+        #await bot.say("You must have the `Manage Messages` permission in order to run that command")
 
-@bot.command(pass_context=True, aliases=["del", "delete"])
-async def clear(ctx):
-    counter = 0
-    logs = []
-    async for log in bot.logs_from(ctx.message.channel):
-        try:
-           logs.append(log)
-           await bot.delete_messages(logs)
-           counter += 1
-        except discord.Forbidden as error:
-            tmp = await bot.say("{] doesn't have permissions".format(bot.user.name))
-            await asyncio.sleep(3)
-            await bot.delete_message(tmp)
-            return
-    await bot.say("Deleted {} messages".format(counter))
+@bot.command(pass_context=True, aliases=["del", "delete", "wipe"])
+@commands.has_permissions(manage_messages=True)
+async def clear(ctx, amount=100):
+
+    try:
+        deleted = await bot.purge_from(ctx.message.channel, limit=amount)
+        count = len(deleted)
+        if count == 1:
+            tmp = await bot.say("Deleted {} message".format(count))
+        else:
+            tmp = await bot.say("Deleted {} messages".format(count))
+        await asyncio.sleep(3)
+        await bot.delete_message(tmp)
+    except discord.Forbidden as error:
+        await bot.say("{} does not have permissions".format(bot.user.name))
 
 """@bot.command(pass_context=True)
 @commands.has_permissions(manage_server=True)
