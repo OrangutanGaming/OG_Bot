@@ -1,3 +1,4 @@
 *.log
 *.pyc
+BotIDs.py
 Rethinkdb/rethinkdb_data
