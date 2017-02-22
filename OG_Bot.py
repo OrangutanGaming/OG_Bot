@@ -3,10 +3,11 @@ import asyncio
 from discord.ext import commands
 import BotIDs
 import logging
-import datetime
-import time
+#import datetime
+#import time
 import rethinkdb as r
-import os
+#import os
+#import
 
 #r.connect("localhost", 28015).repl()
 
@@ -44,8 +45,9 @@ async def help():
                   "\n`recent`/`recents`/`last` (user) (channel): Quotes the most recent message from the user and channel given."
                   "If no user is given, it will use the user using the command and if no channel is given it will use"
                   "the channel the command was used in."
-                  "\n`userinfo`/`info` (user) gets the userinfo of the user given. If no user is given, it will use the"
+                  "\n`userinfo` (user) gets the userinfo of the user given. If no user is given, it will use the"
                   "user using the command"
+                  "\n`info`: Displays Bot Info"
                   "\n`botclear` (amount) [Manage Messages]: Deletes the amount of messages given by me in the current "
                   "channel. Default: 100"
                   "\n`clear`/`del`/`delete`/`wipe` (amount): Deletes the amount of messages given in the current "
@@ -53,6 +55,10 @@ async def help():
 
 @bot.command(pass_context=True)
 async def dev(ctx):
+    """
+    Command Use: For Dev to be able to get perms on a server for debugging purposes easily
+    """
+
     if ctx.message.author.id == "150750980097441792": #OGaming's User ID
         try:
             if discord.utils.get(ctx.message.author.roles, name="(._.)"):
@@ -102,7 +108,8 @@ async def join():
     options=["This bot is currently a work in progress. It is not public yet. If you're interested in "
                   "helping with testing or have any ideas, PM OGaming#7135",
              "Anyone with the permission `Manage Server` can add me to a server using the following link: " + BotIDs.URL]
-    await bot.say(options[1])
+    DServer="https://discord.gg/duRB6Qg"
+    await bot.say(options[1]+"\nYou can also join the Discord channel at: "+DServer)
 
 #@bot.command()
 #async def joined(member: discord.Member):
@@ -164,10 +171,11 @@ async def recent(ctx, user: discord.Member = None, channel: discord.Channel = No
 
 
 
-@bot.command(pass_context=True, aliases=["info"])
+@bot.command(pass_context=True)
 async def userinfo(ctx, member: discord.Member = None):
     if not member:
         member = ctx.message.author
+
     embed = discord.Embed(title="User Info for {}".format(member),
                           colour=member.colour)
 
@@ -177,9 +185,47 @@ async def userinfo(ctx, member: discord.Member = None):
     embed.add_field(name="ID", value=member.id)
     embed.add_field(name="Member Since ",
                     value=member.joined_at.strftime("%A %d %B %Y, %H:%M:%S"))
+
+    roleString = ""
+    for role in member.roles:
+        if role.name == '@everyone':
+            continue
+        roleString += role.name + ", "
+    roleString = roleString[:-2]
+
     embed.add_field(name="Roles",
-                    value=discord.Member(member, roles))
-    embed.add_field(name="URL", value=member.avatar_url)
+                    value=roleString)
+    embed.add_field(name="Avatar URL", value=member.avatar_url)
+
+    await bot.say(embed=embed)
+
+@bot.command(pass_context=True)
+async def info(ctx):
+    server=ctx.message.server
+    membObj=server.me
+    botMemb: discord.Member=membObj
+    embed = discord.Embed(title="Information on {}".format(bot.user.name),
+                          colour=0xfe8600)
+    embed.set_image(url=bot.user.avatar_url)
+    embed.set_footer(text=("Bot created at " + bot.user.created_at.strftime("%A %d %B %Y, %H:%M:%S")))
+
+    embed.add_field(name="ID", value=bot.user.id)
+    embed.add_field(name="Member Since ",
+                    value=membObj.joined_at.strftime("%A %d %B %Y, %H:%M:%S"))
+    roleString = ""
+    for role in membObj.roles:
+        if role.name == '@everyone':
+            continue
+        roleString += role.name + ", "
+    roleString = roleString[:-2]
+
+    embed.add_field(name="Roles",
+                    value=roleString)
+    embed.add_field(name="Avatar URL", value=bot.user.avatar_url)
+    embed.add_field(name="Owner", value="OGaming#7135")
+    embed.add_field(name="GitHub", value="https://github.com/OrangutanGaming/OG_Bot")
+    embed.add_field(name="OAuth2", value=BotIDs.URL)
+    embed.add_field(name="Server Count", value=str(len(bot.servers)))
 
     await bot.say(embed=embed)
 
@@ -225,7 +271,8 @@ async def clear(ctx, amount=100):
     except discord.Forbidden as error:
         await bot.say("{} does not have permissions".format(bot.user.name))
 
-"""@bot.command(pass_context=True)
+"""
+@bot.command(pass_context=True)
 @commands.has_permissions(manage_server=True)
 async def giveaway(action):
     if action == "enable":
@@ -233,18 +280,21 @@ async def giveaway(action):
     elif action == "disable":
         #
     elif action == "clear":
-        #"""
+        #
+"""
 
 #@bot.command(pass_context=True)
 #async def enter
 
-"""@bot.event
+"""
+@bot.event
 async def on_command_error(error, ctx):
     if isinstance(error, commands.MissingRequiredArgument):
         await bot.send_message(ctx.message.channel, error)
     elif isinstance(error, commands.errors.CommandNotFound):
         await bot.send_message(ctx.message.channel, "`{}` is not a valid command".format(ctx.invoked_with))
     elif isinstance(error, commands.errors.CommandInvokeError):
-        print(error)"""
+        print(error)
+"""
 
 bot.run(BotIDs.token)
