@@ -2,5 +2,5 @@
 *.pyc
 BotIDs.py
 Rethinkdb/rethinkdb_data
-rethinkdb.Ink
+rethinkdb.ink
 .idea
