@@ -21,7 +21,7 @@ logger.addHandler(handler)
 
 @bot.event
 async def on_ready():
-    gamename="with Orangutans|?help"
+    gamename="with OG|?help"
     await bot.change_presence(game=discord.Game(name=gamename))
     print("Logged in as")
     print(bot.user.name)
@@ -34,6 +34,7 @@ bot.remove_command("help")
 @bot.command()
 async def help():
     await bot.say("OG_Bot by Orangutan Gaming `(OGaming#7135)`"
+                  "\nPrefixes:`?`"
                   "\n`<Mandatory Argument>`, `(Optional Argument)` `Alias 1`/`Alias 2` [Permission Needed]"
                   "\n`help`: Gives this command"
                   "\n`join`: Shows information on how to add me to your server"
@@ -48,7 +49,7 @@ async def help():
                   "\n`userinfo` (user) gets the userinfo of the user given. If no user is given, it will use the"
                   "user using the command"
                   "\n`info`: Displays Bot Info"
-                  "\n`botclear` (amount) [Manage Messages]: Deletes the amount of messages given by me in the current "
+                  "\n`botclear`/`bclear` (amount) [Manage Messages]: Deletes the amount of messages given by me in the current "
                   "channel. Default: 100"
                   "\n`clear`/`del`/`delete`/`wipe` (amount): Deletes the amount of messages given in the current "
                   "channel. Default: 100")
@@ -234,7 +235,7 @@ async def info(ctx):
 
     await bot.say(embed=embed)
 
-@bot.command(pass_context=True)
+@bot.command(pass_context=True, aliases=["bclear"])
 @commands.has_permissions(manage_messages=True)
 async def botclear(ctx, amount=100):
     #user = ctx.message.author
