@@ -21,12 +21,12 @@ logger.addHandler(handler)
 
 @bot.event
 async def on_ready():
-    gamename="with Orangutans"
+    gamename="with Orangutans|?help"
     await bot.change_presence(game=discord.Game(name=gamename))
-    print('Logged in as')
+    print("Logged in as")
     print(bot.user.name)
     print(bot.user.id)
-    print('------')
+    print("------")
     print("Playing", gamename)
     print(BotIDs.URL)
 
@@ -127,7 +127,12 @@ async def msgcount(ctx, user: discord.Member = None, channel: discord.Channel = 
         if log.author == user:
             counter += 1
     bot.delete_message(ctx.message)
-    await bot.edit_message(tmp, "{} has {} messages in {}.".format(user.mention, counter, channel.mention))
+    if counter == 100:
+        await bot.edit_message(tmp, "{} has at least {} messages in {}".format(user.mention, counter, channel.mention))
+    elif counter <= 99:
+        await bot.edit_message(tmp, "{} has {} messages in {}".format(user.mention, counter, channel.mention))
+    else:
+        await bot.edit_message(tmp, "Counter Bug")
 
 @bot.command(pass_context=True, aliases=["amcount"])
 async def amsgcount(ctx, channel: discord.Channel = None):
@@ -139,9 +144,9 @@ async def amsgcount(ctx, channel: discord.Channel = None):
         counter += 1
     bot.delete_message(ctx.message)
     if counter == 100:
-        await bot.edit_message(tmp, "There are at least {} messages in {}.".format(counter, channel.mention))
+        await bot.edit_message(tmp, "There are at least {} messages in {}".format(counter, channel.mention))
     elif counter <= 99:
-        await bot.edit_message(tmp, "There are {} messages in {}.".format(counter, channel.mention))
+        await bot.edit_message(tmp, "There are {} messages in {}".format(counter, channel.mention))
     else:
         await bot.edit_message(tmp, "Counter Bug")
 
