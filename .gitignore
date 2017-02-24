@@ -1,7 +1,7 @@
 *.log
 *.pyc
-BotIDs.py
-Rethinkdb/rethinkdb_data
-rethinkdb.ink
-.idea
-__pycache__
+/BotIDs.py
+/Rethinkdb/rethinkdb_data
+/rethinkdb.ink
+/.idea
+/__pycache__
