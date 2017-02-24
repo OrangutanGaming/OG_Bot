@@ -6,7 +6,6 @@ import logging
 import traceback
 import rethinkdb as r
 import datetime
-#import time
 #import os
 
 #r.connect("localhost", 28015).repl()
