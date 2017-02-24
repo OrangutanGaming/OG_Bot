@@ -1,6 +1,6 @@
 *.log
 *.pyc
-#BotIDs.py
+BotIDs.py
 Rethinkdb/rethinkdb_data
 rethinkdb.ink
 .idea
