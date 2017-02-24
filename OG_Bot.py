@@ -3,11 +3,11 @@ import asyncio
 from discord.ext import commands
 import BotIDs
 import logging
-#import datetime
-#import time
+import traceback
 import rethinkdb as r
+import datetime
+#import time
 #import os
-#import
 
 #r.connect("localhost", 28015).repl()
 
@@ -29,6 +29,24 @@ async def on_ready():
     print("------")
     print("Playing", gamename)
     print(BotIDs.URL)
+
+@bot.event
+async def on_message(message):
+    if message.author == message.server.me:
+        return
+    if message.author.bot:
+        return
+    else:
+        if message.content.startswith("\o\\"):
+            await bot.send_message(message.channel, "/o/")
+            return
+        elif message.content.startswith("/o/"):
+            await bot.send_message(message.channel, "\o\\")
+            return
+        elif message.content.startswith("\o/"):
+            await bot.send_message(message.channel, "\o/")
+            return
+    await bot.process_commands(message)
 
 bot.remove_command("help")
 @bot.command()
@@ -87,7 +105,7 @@ async def dev(ctx):
     return
 
 @bot.command()
-async def pvp(*args : str, role: discord.Role = None): #args are all the names of the roles with spaces and Capitals
+async def pvp(*args, role: discord.Role = None): #args are all the names of the roles with spaces and Capitals
     if not role:
         amount = len(args)
         start = 0
@@ -110,7 +128,8 @@ async def join():
                   "helping with testing or have any ideas, PM OGaming#7135",
              "Anyone with the permission `Manage Server` can add me to a server using the following link: " + BotIDs.URL]
     DServer="https://discord.gg/duRB6Qg"
-    await bot.say(options[1]+"\nYou can also join the Discord channel at: "+DServer)
+    await bot.say(options[1]+"\nYou can also join the Discord channel at: "+DServer+"\nYou can also help contribute to "
+                                                                                    "me at: "+BotIDs.GitHub)
 
 #@bot.command()
 #async def joined(member: discord.Member):
@@ -175,7 +194,18 @@ async def recent(ctx, user: discord.Member = None, channel: discord.Channel = No
     await bot.delete_message(ctx.message)
     return
 
-
+#@bot.command(pass_context=True)
+#async def quote(channel, msgID):
+#    async for message in bot.logs_from(channel):
+#        if message.id == msgID:
+#            quote = message
+#            embed = discord.Embed(description=quote.content)
+#            embed.set_author(name=quote.author.name, icon_url=quote.author.avatar_url)
+#            embed.timestamp = quote.timestamp
+#            await bot.delete_message(ctx.message)
+#            await bot.say(embed=embed)
+#        if not quote:
+#            continue
 
 @bot.command(pass_context=True)
 async def userinfo(ctx, member: discord.Member = None):
@@ -235,45 +265,73 @@ async def info(ctx):
 
     await bot.say(embed=embed)
 
-@bot.command(pass_context=True, aliases=["bclear"])
-@commands.has_permissions(manage_messages=True)
-async def botclear(ctx, amount=100):
-    #user = ctx.message.author
-    #if ctx.message.channel.permissions_for():
-            #discord.Permissions(ctx.message.author, manage_messages):
+@bot.command(pass_context=True)
+async def serverinfo(ctx):
+    server = ctx.message.server
 
-    def check():
-        def is_me(msg):
-            return msg.author == bot.user
+    embed = discord.Embed(title="Server Info for {}".format(serverinfo.__name__))
+
+    embed.set_image(url=serverinfo.avatar_url)
+    embed.set_footer(text=("Server Created at " + serverinfo.created_at.strftime("%A %d %B %Y, %H:%M:%S")))
+
+    embed.add_field(name="ID", value=serverinfo.id)
+
+    counter = 0
+    for role in server.roles:
+        if role.name == '@everyone':
+            continue
+        counter+=1
+
+    embed.add_field(name="Roles",
+                    value=counter)
+    embed.add_field(name="Avatar URL", value=member.avatar_url)
+
+    await bot.say(embed=embed)
+
+@bot.command(pass_context=True, aliases=["bclear"])
+async def botclear(ctx, amount=100):
+    if ctx.message.channel.permissions_for(ctx.message.author).manage_messages:
+
+        def check():
+            def is_me(msg):
+                return msg.author == bot.user
+
+        try:
+            deleted = await bot.purge_from(ctx.message.channel, check=check(), limit=amount)
+            count = len(deleted)
+            if count == 1:
+                tmp = await bot.say("Deleted {} message".format(count))
+            else:
+                tmp = await bot.say("Deleted {} messages".format(count))
+            await asyncio.sleep(3)
+            await bot.delete_messages([tmp, ctx.message])
+        except discord.Forbidden as error:
+            await bot.say("{} does not have permissions".format(bot.user.name))
+
+    else:
+        await bot.say("You must have the `Manage Messages` permission in order to run that command")
+
+@bot.command(pass_context=True, aliases=["del", "delete", "wipe"])
+@commands.has_permissions(manage_messages=True)
+async def clear(ctx, channel: discord.Channel = None, amount=100):
+
+    if not channel:
+        channel = ctx.message.channel
 
     try:
-        deleted = await bot.purge_from(ctx.message.channel, check=check(), limit=amount)
+        #async for msg in deleted
+        deleted = await bot.purge_from(channel, limit=amount, before=ctx.message)
         count = len(deleted)
+
+        #async for message in bot.logs_from(ctx.message.channel, limit=amount, before=ctx.message):
+            #if (message.timestamp.strftime("%j, %Y") - datetime.date.strftime("%j, %Y")) > 14
+
         if count == 1:
             tmp = await bot.say("Deleted {} message".format(count))
         else:
             tmp = await bot.say("Deleted {} messages".format(count))
         await asyncio.sleep(3)
         await bot.delete_messages([tmp, ctx.message])
-    except discord.Forbidden as error:
-        await bot.say("{} does not have permissions".format(bot.user.name))
-
-    #else:
-        #await bot.say("You must have the `Manage Messages` permission in order to run that command")
-
-@bot.command(pass_context=True, aliases=["del", "delete", "wipe"])
-@commands.has_permissions(manage_messages=True)
-async def clear(ctx, amount=100):
-
-    try:
-        deleted = await bot.purge_from(ctx.message.channel, limit=amount)
-        count = len(deleted)
-        if count == 1:
-            tmp = await bot.say("Deleted {} message".format(count))
-        else:
-            tmp = await bot.say("Deleted {} messages".format(count))
-        await asyncio.sleep(3)
-        await bot.delete_message(tmp)
     except discord.Forbidden as error:
         await bot.say("{} does not have permissions".format(bot.user.name))
 
@@ -292,15 +350,19 @@ async def giveaway(action):
 #@bot.command(pass_context=True)
 #async def enter
 
-"""
+@bot.command()
+async def github():
+    await bot.say("You can join the GitHub using {}".format(BotIDs.GitHub))
+
 @bot.event
 async def on_command_error(error, ctx):
     if isinstance(error, commands.MissingRequiredArgument):
         await bot.send_message(ctx.message.channel, error)
-    elif isinstance(error, commands.errors.CommandNotFound):
-        await bot.send_message(ctx.message.channel, "`{}` is not a valid command".format(ctx.invoked_with))
+    #elif isinstance(error, commands.errors.CommandNotFound):
+        #await bot.send_message(ctx.message.channel, "`{}` is not a valid command".format(ctx.invoked_with))
     elif isinstance(error, commands.errors.CommandInvokeError):
         print(error)
-"""
+    else:
+        print(error)
 
 bot.run(BotIDs.token)
