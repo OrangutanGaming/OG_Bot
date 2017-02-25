@@ -1,5 +1,6 @@
 from discord.ext import commands
 import discord
+import BotIDs
 
 class Info():
     def __init__(self, bot):
