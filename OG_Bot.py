@@ -343,6 +343,8 @@ async def clear(ctx, user: discord.User = None, channel: discord.Channel = None,
             await bot.delete_messages([tmp, ctx.message])
         except discord.Forbidden as error:
             await bot.say("{} does not have permissions".format(bot.user.name))
+    else:
+        await bot.say("You must have the `Manage Messages` permission in order to run that command")
 
 """
 @bot.command(pass_context=True)
