@@ -66,10 +66,11 @@ async def help():
                   "\n`userinfo` (user) gets the userinfo of the user given. If no user is given, it will use the"
                   "user using the command"
                   "\n`info`: Displays Bot Info"
-                  "\n`botclear`/`bclear` (amount) [Manage Messages]: Deletes the amount of messages given by me in the current "
-                  "channel. Default: 100"
-                  "\n`clear`/`del`/`delete`/`wipe` (amount): Deletes the amount of messages given in the current "
-                  "channel. Default: 100")
+                  "\n`botclear`/`bclear` (amount) [Manage Messages]: Deletes the amount of messages given by me in the "
+                  "current channel. Default: 100"
+                  "\n`clear`/`del`/`delete`/`wipe` (amount) [Manage Messages]: Deletes the amount of messages given in "
+                  "the current channel. Default: 100"
+                  "\n`github`: Displays GitHub Link")
 
 @bot.command(pass_context=True)
 async def dev(ctx):
@@ -264,28 +265,28 @@ async def info(ctx):
 
     await bot.say(embed=embed)
 
-@bot.command(pass_context=True)
-async def serverinfo(ctx):
-    server = ctx.message.server
-
-    embed = discord.Embed(title="Server Info for {}".format(serverinfo.__name__))
-
-    embed.set_image(url=serverinfo.avatar_url)
-    embed.set_footer(text=("Server Created at " + serverinfo.created_at.strftime("%A %d %B %Y, %H:%M:%S")))
-
-    embed.add_field(name="ID", value=serverinfo.id)
-
-    counter = 0
-    for role in server.roles:
-        if role.name == '@everyone':
-            continue
-        counter+=1
-
-    embed.add_field(name="Roles",
-                    value=counter)
-    embed.add_field(name="Avatar URL", value=member.avatar_url)
-
-    await bot.say(embed=embed)
+#@bot.command(pass_context=True)
+#async def serverinfo(ctx):
+#    server = ctx.message.server
+#
+#    embed = discord.Embed(title="Server Info for {}".format(serverinfo.__name__))
+#
+#    embed.set_image(url=serverinfo.avatar_url)
+#    embed.set_footer(text=("Server Created at " + serverinfo.created_at.strftime("%A %d %B %Y, %H:%M:%S")))
+#
+#    embed.add_field(name="ID", value=serverinfo.id)
+#
+#    counter = 0
+#    for role in server.roles:
+#        if role.name == '@everyone':
+#            continue
+#        counter+=1
+#
+#    embed.add_field(name="Roles",
+#                    value=counter)
+#    embed.add_field(name="Avatar URL", value=member.avatar_url)
+#
+#    await bot.say(embed=embed)
 
 @bot.command(pass_context=True, aliases=["bclear"])
 async def botclear(ctx, amount=100):
@@ -311,28 +312,37 @@ async def botclear(ctx, amount=100):
         await bot.say("You must have the `Manage Messages` permission in order to run that command")
 
 @bot.command(pass_context=True, aliases=["del", "delete", "wipe"])
-@commands.has_permissions(manage_messages=True)
-async def clear(ctx, channel: discord.Channel = None, amount=100):
+async def clear(ctx, user: discord.User = None, channel: discord.Channel = None, amount=100):
 
-    if not channel:
-        channel = ctx.message.channel
+    if ctx.message.channel.permissions_for(ctx.message.author).manage_messages:
 
-    try:
-        #async for msg in deleted
-        deleted = await bot.purge_from(channel, limit=amount, before=ctx.message)
-        count = len(deleted)
+        if not channel:
+            channel = ctx.message.channel
 
-        #async for message in bot.logs_from(ctx.message.channel, limit=amount, before=ctx.message):
-            #if (message.timestamp.strftime("%j, %Y") - datetime.date.strftime("%j, %Y")) > 14
+        try:
+            if not user:
+                deleted = await bot.purge_from(channel, limit=amount, before=ctx.message)
+                count = len(deleted)
+            else:
+                count = 0
+                async for message in bot.logs_from(channel, limit=amount, before=ctx.message):
+                    if message.author == user:
+                        await bot.delete_message(message)
+                        count += 1
+                    else:
+                        continue
 
-        if count == 1:
-            tmp = await bot.say("Deleted {} message".format(count))
-        else:
-            tmp = await bot.say("Deleted {} messages".format(count))
-        await asyncio.sleep(3)
-        await bot.delete_messages([tmp, ctx.message])
-    except discord.Forbidden as error:
-        await bot.say("{} does not have permissions".format(bot.user.name))
+            #async for message in bot.logs_from(ctx.message.channel, limit=amount, before=ctx.message):
+                #if (message.timestamp.strftime("%j, %Y") - datetime.date.strftime("%j, %Y")) > 14
+
+            if count == 1:
+                tmp = await bot.say("Deleted {} message".format(count))
+            else:
+                tmp = await bot.say("Deleted {} messages".format(count))
+            await asyncio.sleep(3)
+            await bot.delete_messages([tmp, ctx.message])
+        except discord.Forbidden as error:
+            await bot.say("{} does not have permissions".format(bot.user.name))
 
 """
 @bot.command(pass_context=True)
