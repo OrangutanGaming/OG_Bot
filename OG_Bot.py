@@ -3,6 +3,7 @@ import asyncio
 from discord.ext import commands
 import BotIDs
 import logging
+from cogs import *
 import traceback
 import rethinkdb as r
 import datetime
@@ -17,6 +18,8 @@ logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
+
+startup_extensions = ["cogs.clears"]
 
 @bot.event
 async def on_ready():
@@ -71,6 +74,20 @@ async def help():
                   "\n`clear`/`del`/`delete`/`wipe` (amount) [Manage Messages]: Deletes the amount of messages given in "
                   "the current channel. Default: 100"
                   "\n`github`: Displays GitHub Link")
+
+@bot.command()
+async def load(extension_name : str):
+    try:
+        bot.load_extension(extension_name)
+    except (AttributeError, ImportError) as e:
+        await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)), delete_after=3)
+        return
+    await bot.say("{} loaded.".format(extension_name), delete_after=3)
+
+@bot.command()
+async def unload(extension_name : str):
+    bot.unload_extension(extension_name)
+    await bot.say("{} unloaded.".format(extension_name), delete_after=3)
 
 @bot.command(pass_context=True)
 async def dev(ctx):
@@ -311,40 +328,81 @@ async def botclear(ctx, amount=100):
     else:
         await bot.say("You must have the `Manage Messages` permission in order to run that command")
 
+"""
 @bot.command(pass_context=True, aliases=["del", "delete", "wipe"])
 async def clear(ctx, user: discord.User = None, channel: discord.Channel = None, amount=100):
 
     if ctx.message.channel.permissions_for(ctx.message.author).manage_messages:
 
+
         if not channel:
             channel = ctx.message.channel
 
         try:
-            if not user:
-                deleted = await bot.purge_from(channel, limit=amount, before=ctx.message)
-                count = len(deleted)
+            async for message in bot.logs_from(channel, limit=amount, before=ctx.message, reverse=True):
+                Time = message.timestamp
+                break
+
+            timeMsg = datetime.date(Time)
+            Today = datetime.date.today()
+            Age = timeMsg - Today
+            if Age <= 14:
+                    count = 0
+                    async for message in bot.logs_from(channel, limit=amount, before=ctx.message):
+                        if not user:
+                            await bot.delete_message(message)
+                            count += 1
+                        else:
+                            if message.author == user:
+                                await bot.delete_message(message)
+                                count += 1
+                            else:
+                                continue
             else:
-                count = 0
-                async for message in bot.logs_from(channel, limit=amount, before=ctx.message):
-                    if message.author == user:
-                        await bot.delete_message(message)
-                        count += 1
-                    else:
-                        continue
-
-            #async for message in bot.logs_from(ctx.message.channel, limit=amount, before=ctx.message):
-                #if (message.timestamp.strftime("%j, %Y") - datetime.date.strftime("%j, %Y")) > 14
-
+                await bot.say("Those messages are too old")
+                return
             if count == 1:
                 tmp = await bot.say("Deleted {} message".format(count))
             else:
                 tmp = await bot.say("Deleted {} messages".format(count))
             await asyncio.sleep(3)
             await bot.delete_messages([tmp, ctx.message])
+
+
         except discord.Forbidden as error:
             await bot.say("{} does not have permissions".format(bot.user.name))
+
     else:
         await bot.say("You must have the `Manage Messages` permission in order to run that command")
+"""
+
+"""
+@bot.command(pass_context=True, aliases=["del", "delete", "wipe"])
+async def clear(ctx, user: discord.User = None, channel: discord.Channel = None, amount=100):
+    to_delete = []
+    cutoff = datetime.datetime.now() - datetime.timedelta(days=14, seconds=-10)
+
+    try:
+        async for message in bot.logs_from(channel, after=cutoff):
+            if user is None or message.author == user:
+                to_delete.append(message)
+            if len(to_delete) >= amount:
+                break
+
+            count = len(to_delete)
+
+            while to_delete:
+                await bot.delete_messages(to_delete[:amount])
+                to_delete = to_delete[amount:]
+
+            await bot.say("Deleted {} messages".format(count), delete_after=3)
+
+    except discord.Forbidden as error:
+        await bot.say("{} does not have permissions".format(bot.user.name), delete_after=3)
+"""
+
+#@bot.command()
+#async def
 
 """
 @bot.command(pass_context=True)
@@ -364,6 +422,14 @@ async def giveaway(action):
 @bot.command()
 async def github():
     await bot.say("You can join the GitHub using {}".format(BotIDs.GitHub))
+
+if __name__ == "__main__":
+    for extension in startup_extensions:
+        try:
+            bot.load_extension(extension)
+        except Exception as e:
+            exc = "{}: {}".format(type(e).__name__, e)
+            print("Failed to load extension {}\n{}".format(extension, exc))
 
 @bot.event
 async def on_command_error(error, ctx):
