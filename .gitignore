@@ -6,3 +6,4 @@
 /rethinkdb.ink
 /.idea
 __pycache__
+/cogs/extension.py
