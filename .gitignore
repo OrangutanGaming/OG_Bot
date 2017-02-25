@@ -2,6 +2,7 @@
 *.pyc
 /BotIDs.py
 /Rethinkdb/rethinkdb_data
+/Rethinkdb/rethinkdb.exe
 /rethinkdb.ink
 /.idea
 /__pycache__
