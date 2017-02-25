@@ -29,7 +29,10 @@ class Info():
         roleString = roleString[:-2]
     
         embed.add_field(name="Roles", value=roleString)
-        embed.add_field(name="Avatar URL", value=member.avatar_url)
+
+        if member.avatar_url:
+            embed.set_image(url=member.avatar_url)
+            embed.add_field(name="Avatar URL", value=member.avatar_url)
     
         await self.bot.say(embed=embed)
     
@@ -53,7 +56,11 @@ class Info():
         roleString = roleString[:-2]
     
         embed.add_field(name="Roles", value=roleString)
-        embed.add_field(name="Avatar URL", value=self.bot.user.avatar_url)
+
+        if self.bot.user.avatar_url:
+            embed.set_image(url=self.bot.user.avatar_url)
+            embed.add_field(name="Avatar URL", value=self.bot.user.avatar_url)
+
         embed.add_field(name="Owner", value="OGaming#7135")
         embed.add_field(name="GitHub", value="https://github.com/OrangutanGaming/OG_Bot")
         embed.add_field(name="OAuth2", value=BotIDs.URL)
@@ -82,9 +89,12 @@ class Info():
         embed.add_field(name="Owner", value=server.owner)
         embed.add_field(name="Region", value=server.region)
         embed.add_field(name="Member Count", value=server.member_count)
-        embed.add_field(name="Avatar URL", value=server.icon_url)
+        if server.icon_url:
+            embed.set_image(url=server.icon_url)
+            embed.add_field(name="Avatar URL", value=server.icon_url)
 
         await self.bot.say(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Info(bot))
