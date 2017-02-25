@@ -3,7 +3,6 @@ import asyncio
 from discord.ext import commands
 import BotIDs
 import logging
-from cogs import *
 import traceback
 import rethinkdb as r
 import datetime
@@ -19,7 +18,7 @@ handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w"
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
-startup_extensions = ["cogs.clears"]
+startup_extensions = ["cogs.clears", "cogs.dev"]
 
 @bot.event
 async def on_ready():
@@ -89,11 +88,12 @@ async def unload(extension_name : str):
     bot.unload_extension(extension_name)
     await bot.say("{} unloaded.".format(extension_name), delete_after=3)
 
+"""
 @bot.command(pass_context=True)
 async def dev(ctx):
     """
-    Command Use: For Dev to be able to get perms on a server for debugging purposes easily
-    """
+    #Command Use: For Dev to be able to get perms on a server for debugging purposes easily
+"""
 
     if ctx.message.author.id == "150750980097441792": #OGaming's User ID
         try:
@@ -134,6 +134,7 @@ async def pvp(*args, role: discord.Role = None): #args are all the names of the 
         return
     else:
         bot.create_role()
+"""
 
 #@bot.command(pass_context=True)
 #async def roles_change(ctx, roles: discord.Role):
