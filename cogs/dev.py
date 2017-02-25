@@ -52,5 +52,9 @@ class Devs():
         else:
             self.bot.create_role()
 
+    #@commands.command(pass_context=True)
+    #async def roles_change(self, ctx, roles: discord.Role):
+    #    self.bot.edit_role(ctx.message.server, roles)#, permissions=administrator)
+
 def setup(bot):
     bot.add_cog(Devs(bot))
