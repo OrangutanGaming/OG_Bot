@@ -1,10 +1,11 @@
 from discord.ext import commands
 import discord
 import datetime
+import asyncio
 
 class Clears():
     def __init__(self, bot):
-        self.bot = bot
+        self.bot= bot
 
     @commands.command(pass_context=True, aliases=["del", "delete", "wipe"])
     async def clear(self, ctx, amount = 100, user: discord.User = None, channel: discord.Channel = None):
@@ -31,6 +32,75 @@ class Clears():
 
         except discord.Forbidden as error:
             await self.bot.say("{} does not have permissions".format(self.bot.user.name), delete_after=3)
+
+    @commands.command(pass_context=True, aliases=["bclear"])
+    async def botclear(self, ctx, amount=100):
+        if ctx.message.channel.permissions_for(ctx.message.author).manage_messages:
+
+            def check():
+                def is_me(msg):
+                    return msg.author == self.bot.user
+
+            try:
+                deleted = await self.bot.purge_from(ctx.message.channel, check=check(), limit=amount)
+                count = len(deleted)
+                if count == 1:
+                    tmp = await self.bot.say("Deleted {} message".format(count))
+                else:
+                    tmp = await self.bot.say("Deleted {} messages".format(count))
+                await asyncio.sleep(3)
+                await self.bot.delete_messages([tmp, ctx.message])
+            except discord.Forbidden as error:
+                await self.bot.say("{} does not have permissions".format(self.bot.user.name))
+
+        else:
+            await self.bot.say("You must have the `Manage Messages` permission in order to run that command")
+
+    # @commands.command(pass_context=True, aliases=["del", "delete", "wipe"])
+    # async def clear(self, ctx, user: discord.User = None, channel: discord.Channel = None, amount=100):
+    # 
+    #     if ctx.message.channel.permissions_for(ctx.message.author).manage_messages:
+    # 
+    # 
+    #         if not channel:
+    #             channel = ctx.message.channel
+    # 
+    #         try:
+    #             async for message in self.bot.logs_from(channel, limit=amount, before=ctx.message, reverse=True):
+    #                 Time = message.timestamp
+    #                 break
+    # 
+    #             timeMsg = datetime.date(Time)
+    #             Today = datetime.date.today()
+    #             Age = timeMsg - Today
+    #             if Age <= 14:
+    #                     count = 0
+    #                     async for message in self.bot.logs_from(channel, limit=amount, before=ctx.message):
+    #                         if not user:
+    #                             await self.bot.delete_message(message)
+    #                             count += 1
+    #                         else:
+    #                             if message.author == user:
+    #                                 await self.bot.delete_message(message)
+    #                                 count += 1
+    #                             else:
+    #                                 continue
+    #             else:
+    #                 await self.bot.say("Those messages are too old")
+    #                 return
+    #             if count == 1:
+    #                 tmp = await self.bot.say("Deleted {} message".format(count))
+    #             else:
+    #                 tmp = await self.bot.say("Deleted {} messages".format(count))
+    #             await asyncio.sleep(3)
+    #             await self.bot.delete_messages([tmp, ctx.message])
+    # 
+    # 
+    #         except discord.Forbidden as error:
+    #             await self.bot.say("{} does not have permissions".format(self.bot.user.name))
+    # 
+    #     else:
+    #         await self.bot.say("You must have the `Manage Messages` permission in order to run that command")
 
 def setup(bot):
     bot.add_cog(Clears(bot))
