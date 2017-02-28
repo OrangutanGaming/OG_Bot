@@ -12,6 +12,7 @@ import datetime
 
 prefix=["?"]
 bot = commands.Bot(command_prefix=prefix, description="Orangutan Gaming's bot")
+bot.remove_command("help")
 
 logger = logging.getLogger("discord")
 logger.setLevel(logging.INFO)
@@ -19,7 +20,13 @@ handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w"
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
-startup_extensions = ["cogs.clear", "cogs.dev", "cogs.info", "cogs.count", "cogs.welcome", "cogs.stickers"]
+startup_extensions = ["cogs.clear",
+                      "cogs.dev",
+                      "cogs.info",
+                      "cogs.count",
+                      "cogs.welcome",
+                      "cogs.stickers",
+                      "cogs.help"]
 
 @bot.event
 async def on_ready():
@@ -50,31 +57,6 @@ async def on_message(message):
             return
     await bot.process_commands(message)
 
-bot.remove_command("help")
-@bot.command()
-async def help(ctx):
-    await ctx.send("OG_Bot by Orangutan Gaming `(OGaming#7135)`"
-                  "\nPrefixes:`?`"
-                  "\n`<Mandatory Argument>`, `(Optional Argument)` `Alias 1`/`Alias 2` [Permission Needed]"
-                  "\n`help`: Gives this command"
-                  "\n`join`: Shows information on how to add me to your server"
-                  "\n`msgcount`/`mcount` (user) (channel): Count how many messages in the channel the command was used "
-                  "in or the channel given by the user given. If no user is given, it will use the person who uses the "
-                  "command"
-                  "\n`amsgcount`/`amcount` (channel): Count how many messages in the channel given. If no channel was"
-                  "given, will use the channel the command was used in"
-                  "\n`recent`/`recents`/`last` (user) (channel): Quotes the most recent message from the user and channel given."
-                  "If no user is given, it will use the user using the command and if no channel is given it will use"
-                  "the channel the command was used in."
-                  "\n`userinfo` (user) gets the userinfo of the user given. If no user is given, it will use the"
-                  "user using the command"
-                  "\n`info`: Displays Bot Info"
-                  "\n`botclear`/`bclear` (amount) [Manage Messages]: Deletes the amount of messages given by me in the "
-                  "current channel. Default: 100"
-                  "\n`clear`/`del`/`delete`/`wipe` (amount) [Manage Messages]: Deletes the amount of messages given in "
-                  "the current channel. Default: 100"
-                  "\n`github`: Displays GitHub Link")
-
 @bot.command()
 async def load(ctx, extension_name : str):
     try:
@@ -97,10 +79,15 @@ async def join(ctx):
     DServer="https://discord.gg/duRB6Qg"
     await ctx.send(options[1]+"\nYou can also join the Discord channel at: "+DServer+"\nYou can also help contribute to "
                                                                                     "me at: "+BotIDs.GitHub)
+    await ctx.send("\nYou can also help support me at " + BotIDs.Patreon)
 
 @bot.command()
 async def support(ctx):
     await ctx.send("You can help support the bot with " + BotIDs.Patreon)
+
+@bot.command()
+async def github(ctx):
+    await ctx.send("You can join the GitHub using {}".format(BotIDs.GitHub))
 
 # @bot.command()
 # async def quote(channel, msgID):
@@ -109,8 +96,8 @@ async def support(ctx):
 #            quote = message
 #            embed = discord.Embed(description=quote.content)
 #            embed.set_author(name=quote.author.name, icon_url=quote.author.avatar_url)
-#            embed.timestamp = quote.timestamp
-#            await ctx.message.delete
+#            embed.timestamp = quote.created_at
+#            await ctx.message.delete()
 #            await ctx.send(embed=embed)
 #        if not quote:
 #            continue
@@ -129,10 +116,6 @@ async def support(ctx):
 # @bot.command()
 # async def enter
 
-@bot.command()
-async def github(ctx):
-    await ctx.send("You can join the GitHub using {}".format(BotIDs.GitHub))
-
 if __name__ == "__main__":
     for extension in startup_extensions:
         try:
@@ -141,15 +124,15 @@ if __name__ == "__main__":
             exc = "{}: {}".format(type(e).__name__, e)
             print("Failed to load extension {}\n{}".format(extension, exc))
 
-@bot.event
-async def on_command_error(error, ctx):
-    if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.message.channel.send(error)
-    # elif isinstance(error, commands.errors.CommandNotFound):
-    #     await message.channel.send("`{}` is not a valid command".format(ctx.invoked_with))
-    elif isinstance(error, commands.errors.CommandInvokeError):
-        print(error)
-    else:
-        print(traceback.print_exception)
+# @bot.event
+# async def on_command_error(error, ctx):
+#     if isinstance(error, commands.MissingRequiredArgument):
+#         await ctx.message.channel.send(error)
+#     # elif isinstance(error, commands.errors.CommandNotFound):
+#     #     await message.channel.send("`{}` is not a valid command".format(ctx.invoked_with))
+#     elif isinstance(error, commands.errors.CommandInvokeError):
+#         print(error)
+#     else:
+#         traceback.print_exception()
 
 bot.run(BotIDs.token)
