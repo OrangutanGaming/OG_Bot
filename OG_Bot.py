@@ -19,7 +19,7 @@ handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w"
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
-startup_extensions = ["cogs.clear", "cogs.dev", "cogs.info", "cogs.count", "cogs.welcome"]
+startup_extensions = ["cogs.clear", "cogs.dev", "cogs.info", "cogs.count", "cogs.welcome", "cogs.stickers"]
 
 @bot.event
 async def on_ready():
@@ -98,10 +98,9 @@ async def join(ctx):
     await ctx.send(options[1]+"\nYou can also join the Discord channel at: "+DServer+"\nYou can also help contribute to "
                                                                                     "me at: "+BotIDs.GitHub)
 
-    embed = discord.Embed(description="No message found")
-    await ctx.send(embed=embed)
-    await ctx.message.delete
-    return
+@bot.command()
+async def support(ctx):
+    await ctx.send("You can help support the bot with " + BotIDs.Patreon)
 
 # @bot.command()
 # async def quote(channel, msgID):
@@ -151,6 +150,6 @@ async def on_command_error(error, ctx):
     elif isinstance(error, commands.errors.CommandInvokeError):
         print(error)
     else:
-        print(error)
+        print(traceback.print_exception)
 
 bot.run(BotIDs.token)
