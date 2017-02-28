@@ -29,13 +29,13 @@ class Devs():
                     await tmp.edit(content="Added")
                     success = await ctx.send("Success")
                     await asyncio.sleep(3)
-                    await self.bot.delete_messages([tmp, success, ctx.message])
+                    await ctx.message.channel.delete_messages([tmp, success, ctx.message])
             except discord.Forbidden as error:
                 await ctx.send(ctx.message.author.mention + "{} doesn't have perms".format(self.bot.user.name))
         else:
             tmp = await ctx.send("{} does not have permission to use this command".format(ctx.message.author.mention))
             await asyncio.sleep(3)
-            await self.bot.delete_messages([tmp, ctx.message])
+            await ctx.channel.delete_messages([tmp, ctx.message])
         return
     
     @commands.command()

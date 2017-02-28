@@ -69,7 +69,7 @@ class Info():
         await ctx.send(embed=embed)
     
     @commands.command()
-    async def guildinfo(self, ctx):
+    async def serverinfo(self, ctx):
         server = ctx.message.guild
 
         embed = discord.Embed(title="guild Info for {}".format(server.name))

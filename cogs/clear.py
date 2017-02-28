@@ -25,7 +25,7 @@ class Clears():
     #             count = len(to_delete)
     #
     #             while to_delete:
-    #                 await self.bot.delete_messages(to_delete[:amount])
+    #                 await ctx.channel.delete_messages(to_delete[:amount])
     #                 to_delete = to_delete[amount:]
     #
     #             await self.bot.say("Deleted {} messages".format(count), delete_after=3)
@@ -33,7 +33,7 @@ class Clears():
     #     except discord.Forbidden as error:
     #         await self.bot.say("{} does not have permissions".format(self.bot.user.name), delete_after=3)
 
-    @commands.command(pass_context=True, aliases=["bclear"])
+    @commands.command(aliases=["bclear"])
     async def botclear(self, ctx, amount=100):
         if ctx.message.channel.permissions_for(ctx.message.author).manage_messages:
 
@@ -42,14 +42,14 @@ class Clears():
                     return msg.author == self.bot.user
 
             try:
-                deleted = await ctx.message.channel.purge(check=check(), limit=amount)
+                deleted = await ctx.channel.purge(check=check(), limit=amount)
                 count = len(deleted)
                 if count == 1:
                     tmp = await ctx.send("Deleted {} message".format(count))
                 else:
                     tmp = await ctx.send("Deleted {} messages".format(count))
                 await asyncio.sleep(3)
-                await self.bot.delete_messages([tmp, ctx.message])
+                await ctx.channel.delete_messages([tmp, ctx.message])
             except discord.Forbidden as error:
                 await ctx.send("{} does not have permissions".format(self.bot.user.name))
 
@@ -67,7 +67,7 @@ class Clears():
 
             try:
                 # async for message in channel.history(limit=amount, before=ctx.message, reverse=True):
-                #     Time = message.timestamp
+                #     Time = message.created_at
                 #     break
                 #
                 # timeMsg = datetime.date(Time)
@@ -77,11 +77,11 @@ class Clears():
                 # count = 0
                 # async for message in channel.history(limit=amount, before=ctx.message):
                 #     if not user:
-                #         await message.delete
+                #         await message.delete()
                 #         count += 1
                 #     else:
                 #         if message.author == user:
-                #             await message.delete
+                #             await message.delete()
                 #             count += 1
                 #         else:
                 #             continue
@@ -97,7 +97,7 @@ class Clears():
                 else:
                     tmp = await self.bot.say("Deleted {} messages".format(count))
                 await asyncio.sleep(3)
-                await self.bot.delete_messages([tmp, ctx.message])
+                await ctx.channel.delete_messages([tmp, ctx.message])
 
 
             except discord.Forbidden as error:

@@ -16,7 +16,7 @@ class Count():
         async for log in channel.history(limit=100, before=ctx.message):
             if log.author == user:
                 counter += 1
-        await ctx.message.delete
+        await ctx.message.delete()
         if counter == 100:
             await tmp.edit(content="{} has at least {} messages in {}".format(user, counter, channel.mention))
         elif counter <= 99:
@@ -32,7 +32,7 @@ class Count():
             channel = ctx.message.channel
         async for log in channel.history(before=ctx.message):
             counter += 1
-        await ctx.message.delete
+        await ctx.message.delete()
         if counter == 100:
             await tmp.edit(content="There are at least {} messages in {}".format(counter, channel.mention))
         elif counter <= 99:
@@ -52,15 +52,15 @@ class Count():
                 quote = message
                 embed = discord.Embed(description=quote.content)
                 embed.set_author(name=quote.author.name, icon_url=quote.author.avatar_url)
-                embed.timestamp = quote.timestamp
-                await ctx.message.delete
+                embed.set_footer(text=quote.created_at)
+                await ctx.message.delete()
                 await ctx.send(embed=embed)
                 return
             if not quote:
                 continue
             embed = discord.Embed(description="No message found")
             await ctx.send(embed=embed)
-            await ctx.message.delete
+            await ctx.message.delete()
             return
 
 def setup(bot):
