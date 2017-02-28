@@ -58,6 +58,10 @@ class Count():
                 return
             if not quote:
                 continue
+            embed = discord.Embed(description="No message found")
+            await ctx.send(embed=embed)
+            await ctx.message.delete
+            return
 
 def setup(bot):
     bot.add_cog(Count(bot))
