@@ -6,8 +6,8 @@ class Extension():
         self.bot = bot
 
     @commands.command()
-    async def commandName(self):
-        await self.bot
+    async def commandName(self, ctx):
+        await ctx.send
 
 def setup(bot):
     bot.add_cog(Extension(bot))

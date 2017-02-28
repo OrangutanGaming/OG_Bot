@@ -6,7 +6,7 @@ class Info():
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(pass_context=True)
+    @commands.command()
     async def userinfo(self, ctx, member: discord.Member = None):
         if not member:
             member = ctx.message.author
@@ -34,11 +34,11 @@ class Info():
             embed.set_image(url=member.avatar_url)
             embed.add_field(name="Avatar URL", value=member.avatar_url)
     
-        await self.bot.say(embed=embed)
+        await ctx.send(embed=embed)
     
-    @commands.command(pass_context=True)
+    @commands.command()
     async def info(self, ctx):
-        server=ctx.message.server
+        server=ctx.message.guild
         membObj=server.me
         embed = discord.Embed(title="Information on {}".format(self.bot.user.name),
                               colour=0xfe8600)
@@ -64,18 +64,18 @@ class Info():
         embed.add_field(name="Owner", value="OGaming#7135")
         embed.add_field(name="GitHub", value="https://github.com/OrangutanGaming/OG_Bot")
         embed.add_field(name="OAuth2", value=BotIDs.URL)
-        embed.add_field(name="Server Count", value=str(len(self.bot.servers)))
+        embed.add_field(name="Server Count", value=str(len(self.bot.guilds)))
     
-        await self.bot.say(embed=embed)
+        await ctx.send(embed=embed)
     
-    @commands.command(pass_context=True)
-    async def serverinfo(self, ctx):
-        server = ctx.message.server
+    @commands.command()
+    async def guildinfo(self, ctx):
+        server = ctx.message.guild
 
-        embed = discord.Embed(title="Server Info for {}".format(server.name))
+        embed = discord.Embed(title="guild Info for {}".format(server.name))
 
         embed.set_image(url=server.icon_url)
-        embed.set_footer(text=("Server Created at " + server.created_at.strftime("%A %d %B %Y, %H:%M:%S")))
+        embed.set_footer(text=("guild Created at " + server.created_at.strftime("%A %d %B %Y, %H:%M:%S")))
 
         embed.add_field(name="ID", value=server.id)
 
@@ -93,7 +93,7 @@ class Info():
             embed.set_image(url=server.icon_url)
             embed.add_field(name="Avatar URL", value=server.icon_url)
 
-        await self.bot.say(embed=embed)
+        await ctx.send(embed=embed)
 
 
 def setup(bot):
