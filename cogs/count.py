@@ -30,9 +30,10 @@ class Count():
         tmp = await ctx.send("Counting messages...")
         if not channel:
             channel = ctx.message.channel
-        async for log in channel.history(before=ctx.message):
+        async for message in channel.history(before=ctx.message, limit=99):
             counter += 1
         await ctx.message.delete()
+        counter += 1
         if counter == 100:
             await tmp.edit(content="There are at least {} messages in {}".format(counter, channel.mention))
         elif counter <= 99:
