@@ -57,7 +57,7 @@ class Clears():
             await ctx.send("You must have the `Manage Messages` permission in order to run that command")
 
     @commands.command(aliases=["del", "delete", "wipe"])
-    async def clear(self, ctx, user: discord.User = None, channel: discord.TextChannel = None, amount=100):
+    async def clear(self, ctx, amount=100, channel: discord.TextChannel = None, user: discord.User = None):
 
         if ctx.message.channel.permissions_for(ctx.message.author).manage_messages:
 
@@ -93,9 +93,9 @@ class Clears():
                 count = len(deleted)
 
                 if count == 1:
-                    tmp = await self.bot.say("Deleted {} message".format(count))
+                    tmp = await ctx.send("Deleted {} message".format(count))
                 else:
-                    tmp = await self.bot.say("Deleted {} messages".format(count))
+                    tmp = await ctx.send("Deleted {} messages".format(count))
                 await asyncio.sleep(3)
                 await ctx.channel.delete_messages([tmp, ctx.message])
 
