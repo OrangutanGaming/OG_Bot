@@ -1,9 +1,10 @@
 from discord.ext import commands
-import discord
 
 class Stickers():
     def __init__(self, bot):
         self.bot = bot
+
+    stickers = []
 
     @commands.command()
     async def stickers(self, ctx):
@@ -50,6 +51,10 @@ class Stickers():
     @commands.command(name="savage")
     async def savage(self, ctx):
         await ctx.send("https://cdn.discordapp.com/attachments/247494716260745216/285931035454078976/unknown.png")
+
+    @commands.command(name="welcome")
+    async def welcome(self, ctx):
+        await ctx.send("https://img1.etsystatic.com/165/0/5592280/il_340x270.1194949329_1hgf.jpg")
 
 def setup(bot):
     bot.add_cog(Stickers(bot))
