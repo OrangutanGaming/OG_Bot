@@ -52,7 +52,7 @@ class Count():
                 quote = message
                 embed = discord.Embed(description=quote.content)
                 embed.set_author(name=quote.author.name, icon_url=quote.author.avatar_url)
-                embed.set_footer(text=quote.created_at)
+                embed.set_footer(text=(quote.created_at))
                 await ctx.message.delete()
                 await ctx.send(embed=embed)
                 return
