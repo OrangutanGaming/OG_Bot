@@ -38,19 +38,27 @@ class Devs():
             await ctx.channel.delete_messages([tmp, ctx.message])
         return
     
-    @commands.command()
-    async def pvp(self, ctx, *args, role: discord.Role = None): #args are all the names of the roles with spaces and Capitals
-        if not role:
-            amount = len(args)
-            start = 0
-            for i in range(start, amount):
-                current = args[i]
-                noSpace = current.replace(" ", "")
-                noSpace = noSpace.lower()
-                await ctx.send("/roles add {} --role {}".format(noSpace, current))
-            return
-        else:
-            self.bot.create_role()
+    # @commands.command()
+    # async def pvp(self, ctx, *args, role: discord.Role = None): #args are all the names of the roles with spaces and Capitals
+    #     if not role:
+    #         amount = len(args)
+    #         start = 0
+    #         for i in range(start, amount):
+    #             current = args[i]
+    #             noSpace = current.replace(" ", "")
+    #             noSpace = noSpace.lower()
+    #             await ctx.send("/roles add {} --role {}".format(noSpace, current))
+    #         return
+    #     else:
+    #         self.bot.create_role()
+
+    # @commands.command()
+    # async def kickall(self, ctx):
+    #     if ctx.message.author.id == "150750980097441792":
+    #         ctx.message.guild.roles
+    #
+    #     else:
+    #         return
 
     #@commands.command(pass_context=True)
     #async def roles_change(self, ctx, roles: discord.Role):
