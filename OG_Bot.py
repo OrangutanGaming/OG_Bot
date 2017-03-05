@@ -114,7 +114,9 @@ async def github(ctx):
 #         #
 
 # @bot.command()
-# async def enter
+# async def enter():
+
+# TODO RethinkDB
 
 if __name__ == "__main__":
     for extension in startup_extensions:
