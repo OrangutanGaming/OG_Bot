@@ -35,9 +35,11 @@ class Count():
         await ctx.message.delete()
         counter += 1
         if counter == 100:
-            await tmp.edit(content="There are at least {} messages in {}".format(counter, channel.mention))
+            await tmp.edit(content="There are now at least {} messages in {}".format(counter, channel.mention))
+        elif counter == 1:
+            await tmp.edit(content="There is now 1 message in {}".format(channel.mention))
         elif counter <= 99:
-            await tmp.edit(content="There are {} messages in {}".format(counter, channel.mention))
+            await tmp.edit(content="There are now {} messages in {}".format(counter, channel.mention))
         else:
             await tmp.edit(content="Counter Bug")
 
