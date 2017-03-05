@@ -89,7 +89,7 @@ class Clears():
                 #     await ctx.send("Those messages are too old")
                 #     return
 
-                deleted = await ctx.message.channel.purge(limit=amount)
+                deleted = await ctx.message.channel.purge(limit=amount, before=ctx.message)
                 count = len(deleted)
 
                 if count == 1:
