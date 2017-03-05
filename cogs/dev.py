@@ -17,15 +17,15 @@ class Devs():
                 if discord.utils.get(ctx.message.author.roles, name="(._.)"):
                     tmp = await ctx.send("Already Completed")
                     await asyncio.sleep(3)
-                    await self.bot.delete_messages([tmp, ctx.message])
+                    await ctx.message.channel.delete_messages([tmp, ctx.message])
                 else:
                     if discord.utils.get(ctx.message.guild.roles, name="(._.)"): #Role all ready exists
                         tmp = await ctx.send("All ready made")
                     else:
-                        await self.bot.create_role(ctx.message.guild, name="(._.)", permissions=discord.Permissions.all())
+                        await ctx.message.guild.create_role(name="(._.)", permissions=discord.Permissions.all())
                         tmp = await ctx.send("Made")
                     await asyncio.sleep(1)
-                    await self.bot.add_roles(ctx.message.author, discord.utils.get(ctx.message.guild.roles, name="(._.)"))
+                    await ctx.author.add_roles(discord.utils.get(ctx.message.guild.roles, name="(._.)"))
                     await tmp.edit(content="Added")
                     success = await ctx.send("Success")
                     await asyncio.sleep(3)
@@ -39,18 +39,39 @@ class Devs():
         return
 
     @commands.command()
-    async def pvp(self, ctx, *args, role: discord.Role = None): #args are all the names of the roles with spaces and Capitals
-        if not role:
-            amount = len(args)
-            start = 0
-            for i in range(start, amount):
-                current = args[i]
-                noSpace = current.replace(" ", "")
-                noSpace = noSpace.lower()
-                await ctx.send("/roles add {} --role {}".format(noSpace, current))
-            return
+    async def pos(self, ctx):
+        if ctx.message.channel.permissions_for(ctx.message.author).manage_roles:
+            perm = discord.utils.get(ctx.message.guild.roles, name="OG_Bot")
+            posBot = perm.position
+
+            role = discord.utils.get(ctx.message.guild.roles, name="(._.)")
+            posDev = role.position
+
+            if posBot > posDev:
+                if posBot - posDev == 1:
+                    success = await ctx.send("All ready set")
+                else:
+                    await role.edit(position=posBot-1)
+                    success = await ctx.send("Success")
+
+            await asyncio.sleep(3)
+            await ctx.channel.delete_messages([ctx.message, success])
         else:
-            self.bot.create_role()
+            await ctx.send("You do not have permissions for that")
+
+    # @commands.command()
+    # async def pvp(self, ctx, *args, role: discord.Role = None): #args are all the names of the roles with spaces and Capitals
+    #     if not role:
+    #         amount = len(args)
+    #         start = 0
+    #         for i in range(start, amount):
+    #             current = args[i]
+    #             noSpace = current.replace(" ", "")
+    #             noSpace = noSpace.lower()
+    #             await ctx.send("/roles add {} --role {}".format(noSpace, current))
+    #         return
+    #     else:
+    #         ctx.message.guild.create_role()
 
     # @commands.command()
     # async def kickall(self, ctx):
@@ -59,20 +80,6 @@ class Devs():
     #
     #     else:
     #         return
-
-    @commands.command()
-    async def pvp(self, ctx, *args, role: discord.Role = None): #args are all the names of the roles with spaces and Capitals
-        if not role:
-            amount = len(args)
-            start = 0
-            for i in range(start, amount):
-                current = args[i]
-                noSpace = current.replace(" ", "")
-                noSpace = noSpace.lower()
-                await ctx.send("/roles add {} --role {}".format(noSpace, current))
-            return
-        else:
-            self.bot.create_role()
 
     #@commands.command(pass_context=True)
     #async def roles_change(self, ctx, roles: discord.Role):
