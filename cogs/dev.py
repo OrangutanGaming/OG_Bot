@@ -9,7 +9,7 @@ class Devs():
     @commands.command()
     async def dev(self, ctx):
 
-        # Command Use: For Dev to be able to get perms on a guild for debugging purposes easily
+        # Command Use: For Dev to be able to get perms on a server for debugging purposes easily
 
         if ctx.message.author.id == 150750980097441792: #OGaming's User ID
             try:
