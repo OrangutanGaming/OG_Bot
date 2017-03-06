@@ -10,8 +10,8 @@ import datetime
 
 #r.connect("localhost", 28015).repl()
 
-prefix=["?"]
-bot = commands.Bot(command_prefix=prefix, description="Orangutan Gaming's bot")
+prefixes=["!o.", "?"]
+bot = commands.Bot(command_prefix=prefixes, description="Orangutan Gaming's bot")
 bot.remove_command("help")
 
 logger = logging.getLogger("discord")
@@ -28,6 +28,15 @@ startup_extensions = ["cogs.clear",
                       "cogs.stickers",
                       "cogs.help"]
 
+def Prefix(quote = None):
+    if quote == None:
+        quote = '"'
+    pPrefix = ""
+    for prefix in prefixes:
+        pPrefix += ('{}'.format(quote)+prefix+'{}'.format(quote)+", ")
+    pPrefix = pPrefix[:-2]
+    return pPrefix
+
 @bot.event
 async def on_ready():
     gamename="with OG|?help"
@@ -38,6 +47,7 @@ async def on_ready():
     print("------")
     print("Playing", gamename)
     print(BotIDs.URL)
+    print("Prefix(es): " + Prefix('"'))
 
 @bot.event
 async def on_message(message):
@@ -45,16 +55,16 @@ async def on_message(message):
         return
     if message.author.bot:
         return
-    else:
-        if message.content.startswith("\o\\"):
-            await message.channel.send("/o/")
-            return
-        elif message.content.startswith("/o/"):
-            await message.channel.send("\o\\")
-            return
-        elif message.content.startswith("\o/"):
-            await message.channel.send("\o/")
-            return
+    # else:
+    #     if message.content.startswith("\o\\"):
+    #         await message.channel.send("/o/")
+    #         return
+    #     elif message.content.startswith("/o/"):
+    #         await message.channel.send("\o\\")
+    #         return
+    #     elif message.content.startswith("\o/"):
+    #         await message.channel.send("\o/")
+    #         return
     await bot.process_commands(message)
 
 @bot.command()
