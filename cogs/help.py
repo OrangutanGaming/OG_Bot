@@ -1,14 +1,14 @@
 from discord.ext import commands
-import OG_Bot
+import cogs.utils.prefix as Prefix
 
 class Help():
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    async def help(self, ctx):
+    @commands.command(name="help")
+    async def helpz(self, ctx):
         await ctx.send("OG_Bot by Orangutan Gaming `(OGaming#7135)`"
-                    "\nPrefixes:{}".format(OG_Bot.Prefix('`'))+
+                    "\nPrefixes:{}".format(Prefix.Prefix('`'))+
                     "\n`<Mandatory Argument>`, `(Optional Argument)` `Alias 1`/`Alias 2` [Permission Needed]"
                     "\n`help`: Gives this command"
                     "\n`join`: Shows information on how to add me to your server"
@@ -27,7 +27,7 @@ class Help():
                     #"current channel. Default: 100"
                     "\n`clear`/`del`/`delete`/`wipe` (amount) [Manage Messages]: Deletes the amount of messages given in "
                     "the current channel. Default: 100"
-                    "\n`stickers`: Displays all the availbile stickers"
+                    "\n`stickers`: Displays all the available stickers"
                     "\n`github`: Displays GitHub Link"
                     "\n`support`: Displays Patreon Link")
 
