@@ -1,5 +1,5 @@
 from discord.ext import commands
-import discord
+import OG_Bot
 
 class Help():
     def __init__(self, bot):
@@ -8,7 +8,7 @@ class Help():
     @commands.command()
     async def help(self, ctx):
         await ctx.send("OG_Bot by Orangutan Gaming `(OGaming#7135)`"
-                    "\nPrefixes:`?`"
+                    "\nPrefixes:{}".format(OG_Bot.Prefix('`'))+
                     "\n`<Mandatory Argument>`, `(Optional Argument)` `Alias 1`/`Alias 2` [Permission Needed]"
                     "\n`help`: Gives this command"
                     "\n`join`: Shows information on how to add me to your server"
