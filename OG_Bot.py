@@ -4,13 +4,14 @@ from discord.ext import commands
 import BotIDs
 import logging
 import traceback
+import cogs.utils.prefix as Prefixes
 import rethinkdb as r
 import datetime
 #import os
 
 #r.connect("localhost", 28015).repl()
 
-prefixes=["!o.", "?"]
+prefixes = Prefixes.prefixes
 bot = commands.Bot(command_prefix=prefixes, description="Orangutan Gaming's bot")
 bot.remove_command("help")
 
@@ -28,15 +29,6 @@ startup_extensions = ["cogs.clear",
                       "cogs.stickers",
                       "cogs.help"]
 
-def Prefix(quote = None):
-    if quote == None:
-        quote = '"'
-    pPrefix = ""
-    for prefix in prefixes:
-        pPrefix += ('{}'.format(quote)+prefix+'{}'.format(quote)+", ")
-    pPrefix = pPrefix[:-2]
-    return pPrefix
-
 @bot.event
 async def on_ready():
     gamename="with OG|?help"
@@ -47,25 +39,25 @@ async def on_ready():
     print("------")
     print("Playing", gamename)
     print(BotIDs.URL)
-    print("Prefix(es): " + Prefix('"'))
+    print("Prefix(es): " + Prefixes.Prefix('"'))
 
-@bot.event
-async def on_message(message):
-    if message.author == message.guild.me:
-        return
-    if message.author.bot:
-        return
-    # else:
-    #     if message.content.startswith("\o\\"):
-    #         await message.channel.send("/o/")
-    #         return
-    #     elif message.content.startswith("/o/"):
-    #         await message.channel.send("\o\\")
-    #         return
-    #     elif message.content.startswith("\o/"):
-    #         await message.channel.send("\o/")
-    #         return
-    await bot.process_commands(message)
+# @bot.event
+# async def on_message(message):
+#     if message.author == message.guild.me:
+#         return
+#     if message.author.bot:
+#         return
+#     # else:
+#     #     if message.content.startswith("\o\\"):
+#     #         await message.channel.send("/o/")
+#     #         return
+#     #     elif message.content.startswith("/o/"):
+#     #         await message.channel.send("\o\\")
+#     #         return
+#     #     elif message.content.startswith("\o/"):
+#     #         await message.channel.send("\o/")
+#     #         return
+#     await bot.process_commands(message)
 
 @bot.command()
 async def load(ctx, extension_name : str):
