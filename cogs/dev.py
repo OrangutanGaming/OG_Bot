@@ -46,7 +46,7 @@ class Devs():
                         success = await ctx.send("All ready set")
                     else:
                         await role.edit(position=posBot - 1)
-                        success = await ctx.send("Success")
+                        success = await ctx.send("Moved")
 
                 await asyncio.sleep(3)
                 await ctx.channel.delete_messages([ctx.message, success])
