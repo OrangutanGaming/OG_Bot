@@ -76,7 +76,7 @@ async def unload(ctx, extension_name : str):
 @bot.command()
 async def join(ctx):
     options=["This bot is currently a work in progress. It is not public yet. If you're interested in "
-                  "helping with testing or have any ideas, PM OGaming#7135",
+             "helping with testing or have any ideas, PM OGaming#7135",
              "Anyone with the permission `Manage server` can add me to a server using the following link: " + BotIDs.URL]
     DServer="https://discord.gg/duRB6Qg"
     await ctx.send(options[1]+"\nYou can also join the Discord channel at: "+DServer+"\nYou can also help contribute to "
