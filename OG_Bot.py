@@ -1,5 +1,4 @@
 import discord
-import asyncio
 from discord.ext import commands
 import BotIDs
 import logging
@@ -7,7 +6,7 @@ import traceback
 import cogs.utils.prefix as Prefixes
 import rethinkdb as r
 import datetime
-#import os
+import os
 
 #r.connect("localhost", 28015).repl()
 
@@ -39,25 +38,25 @@ async def on_ready():
     print("------")
     print("Playing", gamename)
     print(BotIDs.URL)
-    print("Prefix(es): " + Prefixes.Prefix('"'))
+    print("Prefixes: " + Prefixes.Prefix('"'))
 
-# @bot.event
-# async def on_message(message):
-#     if message.author == message.guild.me:
-#         return
-#     if message.author.bot:
-#         return
-#     # else:
-#     #     if message.content.startswith("\o\\"):
-#     #         await message.channel.send("/o/")
-#     #         return
-#     #     elif message.content.startswith("/o/"):
-#     #         await message.channel.send("\o\\")
-#     #         return
-#     #     elif message.content.startswith("\o/"):
-#     #         await message.channel.send("\o/")
-#     #         return
-#     await bot.process_commands(message)
+@bot.event
+async def on_message(message):
+    if message.author == message.guild.me:
+        return
+    if message.author.bot:
+        return
+    # else:
+    #     if message.content.startswith("\o\\"):
+    #         await message.channel.send("/o/")
+    #         return
+    #     elif message.content.startswith("/o/"):
+    #         await message.channel.send("\o\\")
+    #         return
+    #     elif message.content.startswith("\o/"):
+    #         await message.channel.send("\o/")
+    #         return
+    await bot.process_commands(message)
 
 @bot.command()
 async def load(ctx, extension_name : str):
