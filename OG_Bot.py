@@ -42,8 +42,6 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    if message.author == message.guild.me:
-        return
     if message.author.bot:
         return
     # else:
