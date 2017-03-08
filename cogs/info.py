@@ -79,11 +79,13 @@ class Info():
 
         embed.add_field(name="ID", value=server.id)
 
-        counter = 0
-        for role in server.roles:
-            if role.name == "@everyone":
-                continue
-            counter+=1
+        def Roles(server)
+            counter = 0
+            for role in server.roles:
+                if role.name == "@everyone":
+                    continue
+                counter+=1
+            return str(counter)
 
         def Bots(server):
             count=0
@@ -95,7 +97,7 @@ class Info():
 
             return str(count)
 
-        embed.add_field(name="Roles", value=counter)
+        embed.add_field(name="Roles", value=Roles(server))
         embed.add_field(name="Owner", value=server.owner)
         embed.add_field(name="Region", value=server.region)
         embed.add_field(name="Member Count", value=server.member_count)
