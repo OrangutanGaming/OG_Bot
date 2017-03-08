@@ -5,12 +5,12 @@ class Help():
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="help")
-    async def helpz(self, ctx):
+    @commands.command()
+    async def help(self, ctx):
         await ctx.send("OG_Bot by Orangutan Gaming `(OGaming#7135)`"
-                    "\nPrefixes:{}".format(Prefix.Prefix('`'))+
-                    "\n`<Mandatory Argument>`, `(Optional Argument)` `Alias 1`/`Alias 2` [Permission Needed]"
-                    "\n`help`: Gives this command"
+                    "\nPrefixes: {}".format(Prefix.Prefix('`'))+
+                    "\n`<Mandatory Argument>`, `(Optional Argument)` `Alias 1`/`Alias 2` `[Permission Needed]`"
+                    "\n`help`: Shows this message"
                     "\n`join`: Shows information on how to add me to your server"
                     "\n`msgcount`/`mcount` (user) (channel): Count how many messages in the channel the command was used "
                     "in or the channel given by the user given. If no user is given, it will use the person who uses the "
