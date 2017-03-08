@@ -79,7 +79,7 @@ class Info():
 
         embed.add_field(name="ID", value=server.id)
 
-        def Roles(server)
+        def Roles(server):
             counter = 0
             for role in server.roles:
                 if role.name == "@everyone":
