@@ -50,7 +50,7 @@ class Info():
                         value=membObj.joined_at.strftime("%A %d %B %Y, %H:%M:%S"))
         roleString = ""
         for role in membObj.roles:
-            if role.name == '@everyone':
+            if role.name == "@everyone":
                 continue
             roleString += role.name + ", "
         roleString = roleString[:-2]
@@ -72,23 +72,34 @@ class Info():
     async def serverinfo(self, ctx):
         server = ctx.message.guild
 
-        embed = discord.Embed(title="guild Info for {}".format(server.name))
+        embed = discord.Embed(title="Server Info for {}".format(server.name))
 
         embed.set_image(url=server.icon_url)
-        embed.set_footer(text=("guild Created at " + server.created_at.strftime("%A %d %B %Y, %H:%M:%S")))
+        embed.set_footer(text=("Server created at " + server.created_at.strftime("%A %d %B %Y, %H:%M:%S")))
 
         embed.add_field(name="ID", value=server.id)
 
         counter = 0
         for role in server.roles:
-            if role.name == '@everyone':
+            if role.name == "@everyone":
                 continue
             counter+=1
+
+        def Bots(server):
+            count=0
+            for member in server.members:
+                if member.bot:
+                    count+=1
+                else:
+                    continue
+
+            return str(count)
 
         embed.add_field(name="Roles", value=counter)
         embed.add_field(name="Owner", value=server.owner)
         embed.add_field(name="Region", value=server.region)
         embed.add_field(name="Member Count", value=server.member_count)
+        embed.add_field(name="Bot Count", value=Bots(server))
         if server.icon_url:
             embed.set_image(url=server.icon_url)
             embed.add_field(name="Avatar URL", value=server.icon_url)
