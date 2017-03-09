@@ -30,7 +30,7 @@ startup_extensions = ["cogs.clear",
 
 @bot.event
 async def on_ready():
-    gamename="with OG|?help"
+    gamename="with OG|o!help"
     await bot.change_presence(game=discord.Game(name=gamename))
     print("Logged in as")
     print(bot.user.name)
