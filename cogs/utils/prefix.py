@@ -1,4 +1,4 @@
-prefixes = ["?", "!.o", "o.!", "!o."]
+prefixes = ["?", "!.o", "o.!", "!o.", "o!"]
 
 def Prefix(quote = None):
     if quote == None:
