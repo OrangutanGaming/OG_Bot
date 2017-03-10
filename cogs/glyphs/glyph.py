@@ -17,7 +17,24 @@ class Glyph():
 
     @commands.command()
     async def glyph(self, ctx, platform):
-        c.execute("select * from codes")
+        if not ctx.guild.id == 130805968681304064:
+            return
+        if not platform:
+            tmp = await ctx.send("State your platform: `PC`, `XBox` or `PS4`")
+
+        if platform.lower() == "pc":
+            platform = "PC"
+        elif platform.lower() == "xbox":
+            platform = "XBox"
+        elif platform.lower() == "ps4":
+            platform = "PS4"
+        else:
+            tmp = await ctx.send("State your platform: `PC`, `XBox` or `PS4`")
+
+        c.execute("SELECT code FROM codes WHERE id IS NULL AND platform={}".format(platform))
+        if not c.fetchall():
+            tmp = await ctx.author.send("There are no more {} codes.".format(platform))
+        code = c.fetchall()
 
 def setup(bot):
     bot.add_cog(Glyph(bot))
