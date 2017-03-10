@@ -12,9 +12,17 @@ XBox = codes.xBox
 PS4 = codes.PS4
 
 Platform = PC
+cPlatform = str(Platform)
+
+# if Platform == PC:
+#     cPlatform = "PC"
+# elif Platform == XBox:
+#     cPlatform = "XBox"
+# elif Platform == PS4:
+#     cPlatform = "PS4"
 
 for i in Platform:
-    c.execute("INSERT INTO codes (platform, code) VALUES (?, ?)", ("{}".format(Platform), Platform[i]))
+    c.execute("INSERT INTO codes (platform, code) VALUES (?, ?)", (cPlatform, i))
 
 connect.commit()
 c.close()
