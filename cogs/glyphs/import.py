@@ -8,9 +8,13 @@ c = connect.cursor()
 #           "(platform text, code text, id text)")
 
 PC = codes.PC
+XBox = codes.xBox
+PS4 = codes.PS4
 
-for i in PC:
-    c.execute("INSERT INTO codes (platform, code) VALUES (?, ?)", ("PC", PC[i]))
+Platform = PC
+
+for i in Platform:
+    c.execute("INSERT INTO codes (platform, code) VALUES (?, ?)", ("{}".format(Platform), Platform[i]))
 
 connect.commit()
 c.close()
