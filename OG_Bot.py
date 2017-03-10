@@ -130,6 +130,7 @@ async def on_command_error(error, ctx):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.message.channel.send(error)
     elif isinstance(error, commands.errors.CommandNotFound):
+        # await ctx.message.channel.send("`{}` is not a valid command".format(ctx.invoked_with))
         return
     elif isinstance(error, commands.errors.CommandInvokeError):
         print(error)
