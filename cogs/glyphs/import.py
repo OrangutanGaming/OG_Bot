@@ -21,9 +21,24 @@ cPlatform = str(Platform)
 # elif Platform == PS4:
 #     cPlatform = "PS4"
 
-for i in Platform:
-    c.execute("INSERT INTO codes (platform, code) VALUES (?, ?)", (cPlatform, i))
+for code in Platform:
+    c.execute("INSERT INTO codes (platform, code) VALUES (?, ?)", (cPlatform, code))
 
 connect.commit()
 c.close()
 connect.close()
+
+# import rethinkdb as r
+# r.connect("localhost", 28015).repl()
+#
+#
+# PC = codes.PC
+# XBox = codes.xBox
+# PS4 = codes.PS4
+#
+# Platforms = PC
+# cPlatform = str(Platform)
+#
+# for code in Platform:
+#     r.db("OG_Bot").table("codes").insert([
+#         {"platform": "{}".format(cPlatform), "code": "{}".format(Platform), "u-id": ""}]).run()
