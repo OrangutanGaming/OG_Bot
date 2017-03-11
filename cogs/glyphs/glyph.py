@@ -21,6 +21,7 @@ class Glyph():
             return
         if not platform:
             tmp = await ctx.send("State your platform: `PC`, `XBox` or `PS4`")
+            return
 
         if platform.lower() == "pc":
             platform = "PC"
@@ -30,11 +31,19 @@ class Glyph():
             platform = "PS4"
         else:
             tmp = await ctx.send("State your platform: `PC`, `XBox` or `PS4`")
+            return
 
         c.execute("SELECT code FROM codes WHERE id IS NULL AND platform={}".format(platform))
         if not c.fetchall():
             tmp = await ctx.author.send("There are no more {} codes.".format(platform))
         code = c.fetchall()
+        c.execute("INSERT INTO codes (id) VALUES (?)", (ctx.author.id))
+        connect.commit()
+        c.close()
+        connect.close()
+
+        ctx.author.send("Your {} code is {}".format(platform, code))
+        return
 
 def setup(bot):
     bot.add_cog(Glyph(bot))
