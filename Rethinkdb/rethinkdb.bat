@@ -1,1 +1,1 @@
-C:\Users\Nihaal\Desktop\OG_Bot\Rethinkdb\rethinkdb.exe
+%~dp0\rethinkdb.exe
