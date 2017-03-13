@@ -13,12 +13,15 @@ class Count():
             user = ctx.message.author
         if not channel:
             channel = ctx.message.channel
-        async for log in channel.history(limit=100, before=ctx.message):
+        async for log in channel.history(limit=99, before=ctx.message):
             if log.author == user:
                 counter += 1
         await ctx.message.delete()
+        counter += 1
         if counter == 100:
             await tmp.edit(content="{} has at least {} messages in {}".format(user, counter, channel.mention))
+        elif counter == 1:
+            await tmp.edit(content="{} has 1 message in {}".format(user, channel.mention))
         elif counter <= 99:
             await tmp.edit(content="{} has {} messages in {}".format(user, counter, channel.mention))
         else:
