@@ -8,7 +8,7 @@ class Help():
     @commands.command()
     async def help(self, ctx):
         await ctx.send("OG_Bot by Orangutan Gaming `(OGaming#7135)`"
-                    "\nPrefixes: {}".format(Prefix.Prefix('`'))+
+                    "\nPrefixes: {}".format(Prefix.Prefix('`')) +
                     "\n`<Mandatory Argument>`, `(Optional Argument)` `Alias 1`/`Alias 2` `[Permission Needed]`"
                     "\n`help`: Shows this message"
                     "\n`join`: Shows information on how to add me to your server"
@@ -29,7 +29,12 @@ class Help():
                     "the current channel. Default: 100"
                     "\n`stickers`: Displays all the available stickers"
                     "\n`github`: Displays GitHub Link"
-                    "\n`support`: Displays Patreon Link")
+                    "\n`support`: Displays Patreon Link"
+                    "\n`prefix`: Displays Prefixes")
+
+    @commands.command()
+    async def prefix(self, ctx):
+        await ctx.send("Prefixes: " + Prefix.Prefix('`'))
 
 def setup(bot):
     bot.add_cog(Help(bot))
