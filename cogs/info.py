@@ -6,7 +6,7 @@ class Info():
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=["uinfo"])
     async def userinfo(self, ctx, member: discord.Member = None):
         if not member:
             member = ctx.message.author
@@ -107,6 +107,10 @@ class Info():
             embed.add_field(name="Avatar URL", value=server.icon_url)
 
         await ctx.send(embed=embed)
+
+    @commands.command(aliases=["cinfo"])
+    async def channelinfo(self, ctx, channel):
+        return
 
 
 def setup(bot):
