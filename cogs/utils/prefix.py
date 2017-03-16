@@ -1,10 +1,10 @@
 prefixes = ["!.o", "o.!", "!o.", "o!"]
 
 def Prefix(quote = None):
-    if quote == None:
-        quote = '"'
+    if not quote:
+        quote = '`'
     pPrefix = ""
     for prefix in prefixes:
-        pPrefix += ('{}'.format(quote)+prefix+'{}'.format(quote)+", ")
+        pPrefix += ("{}".format(quote)+prefix+"{}".format(quote)+", ")
     pPrefix = pPrefix[:-2]
     return pPrefix
