@@ -15,7 +15,7 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or(*prefixes), descrip
 bot.remove_command("help")
 
 logger = logging.getLogger("discord")
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARNING)
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
@@ -27,7 +27,8 @@ startup_extensions = ["cogs.clear",
                       "cogs.welcome",
                       "cogs.stickers",
                       "cogs.help",
-                      "cogs.fun"]
+                      "cogs.fun",
+                      "cogs.utils.stats"]
 
 @bot.event
 async def on_ready():
