@@ -70,7 +70,7 @@ class Info():
     
         await ctx.send(embed=embed)
     
-    @commands.command()
+    @commands.command(aliases=["sinfo"])
     async def serverinfo(self, ctx):
         server = ctx.message.guild
 
