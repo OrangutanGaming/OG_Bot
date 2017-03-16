@@ -11,7 +11,7 @@ import os
 #r.connect("localhost", 28015).repl()
 
 prefixes = Prefixes.prefixes
-bot = commands.Bot(command_prefix=commands.when_mentioned_or(prefixes), description="Orangutan Gaming's bot")
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(*prefixes), description="Orangutan Gaming's bot")
 bot.remove_command("help")
 
 logger = logging.getLogger("discord")
