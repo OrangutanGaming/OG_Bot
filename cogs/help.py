@@ -8,7 +8,7 @@ class Help():
     @commands.command()
     async def help(self, ctx):
         await ctx.send("OG_Bot by Orangutan Gaming `(OGaming#7135)`"
-                    "\nPrefixes: {}".format(Prefix.Prefix('`')) +
+                    "\nPrefixes: `@OG_Bot`, {}".format(Prefix.Prefix('`')) +
                     "\n`<Mandatory Argument>`, `(Optional Argument)` `Alias 1`/`Alias 2` `[Permission Needed]`"
                     "\n`help`: Shows this message"
                     "\n`join`: Shows information on how to add me to your server"
@@ -35,7 +35,7 @@ class Help():
 
     @commands.command()
     async def prefix(self, ctx):
-        await ctx.send("Prefixes: " + Prefix.Prefix('`'))
+        await ctx.send("Prefixes: `@OG_Bot`, " + Prefix.Prefix('`'))
 
 def setup(bot):
     bot.add_cog(Help(bot))

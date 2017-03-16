@@ -11,7 +11,7 @@ import os
 #r.connect("localhost", 28015).repl()
 
 prefixes = Prefixes.prefixes
-bot = commands.Bot(command_prefix=prefixes, description="Orangutan Gaming's bot")
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(prefixes), description="Orangutan Gaming's bot")
 bot.remove_command("help")
 
 logger = logging.getLogger("discord")
@@ -45,6 +45,9 @@ async def on_ready():
 async def on_message(message):
     if message.author.bot:
         return
+    # if message.content.endswith == "":
+    #     await message.channel.send("What?")
+    #     return
     # else:
     #     if message.content.startswith("\o\\"):
     #         await message.channel.send("/o/")
@@ -56,6 +59,11 @@ async def on_message(message):
     #         await message.channel.send("\o/")
     #         return
     await bot.process_commands(message)
+
+@bot.event
+async def on_guild_join(guild):
+    await guild.default_channel.send("Welcome to the world of Orangutans! I was made by `OGaming#7135` Run `o!help` for"
+                                     " help")
 
 @bot.command()
 async def load(ctx, extension_name : str):

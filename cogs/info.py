@@ -1,6 +1,7 @@
 from discord.ext import commands
 import discord
 import BotIDs
+import cogs.utils.prefix as Prefix
 
 class Info():
     def __init__(self, bot):
@@ -62,6 +63,7 @@ class Info():
             embed.add_field(name="Avatar URL", value=self.bot.user.avatar_url)
 
         embed.add_field(name="Owner", value="OGaming#7135")
+        embed.add_field(name="Prefixes", value=Prefix.Prefix("`") + "`@OG_Bot`")
         embed.add_field(name="GitHub", value="https://github.com/OrangutanGaming/OG_Bot")
         embed.add_field(name="OAuth2", value=BotIDs.URL)
         embed.add_field(name="Server Count", value=str(len(self.bot.guilds)))
@@ -72,7 +74,7 @@ class Info():
     async def serverinfo(self, ctx):
         server = ctx.message.guild
 
-        embed = discord.Embed(title="Server Info for {}".format(server.name))
+        embed = discord.Embed(title="Server Info for {}".format(server.name), colour=0xffa500)
 
         embed.set_image(url=server.icon_url)
         embed.set_footer(text=("Server created at " + server.created_at.strftime("%A %d %B %Y, %H:%M:%S")))
@@ -107,10 +109,6 @@ class Info():
             embed.add_field(name="Avatar URL", value=server.icon_url)
 
         await ctx.send(embed=embed)
-
-    @commands.command(aliases=["cinfo"])
-    async def channelinfo(self, ctx, channel):
-        return
 
 
 def setup(bot):
