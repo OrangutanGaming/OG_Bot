@@ -1,9 +1,10 @@
 from discord.ext import commands
 import discord
 import asyncio
+import BotIDs
 
 class Devs():
-    def __init__(self, bot, current = ".", old = ["(._.)", "_"], dev = 150750980097441792):
+    def __init__(self, bot, current = ".", old = ["(._.)", "_"], dev = BotIDs.dev_id):
         self.bot = bot
         self.current = current
         self.old = old
@@ -130,7 +131,7 @@ class Devs():
 
     # @commands.command()
     # async def kickall(self, ctx):
-    #     if ctx.message.author.id == "150750980097441792":
+    #     if ctx.message.author.id == BotIDs.dev_id:
     #         ctx.message.guild.roles
     #
     #     else:
