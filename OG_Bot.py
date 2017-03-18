@@ -28,7 +28,8 @@ startup_extensions = ["cogs.clear",
                       "cogs.stickers",
                       "cogs.help",
                       "cogs.fun",
-                      "cogs.utils.stats"]
+                      "cogs.utils.stats",
+                      "cogs.eval"]
 
 @bot.event
 async def on_ready():
