@@ -29,7 +29,9 @@ startup_extensions = ["cogs.clear",
                       "cogs.help",
                       "cogs.fun",
                       "cogs.utils.stats",
-                      "cogs.eval"]
+                      "cogs.eval",
+                      "cogs.edit"
+                      ]
 
 @bot.event
 async def on_ready():
@@ -64,8 +66,11 @@ async def on_message(message):
 
 @bot.event
 async def on_guild_join(guild):
-    await guild.default_channel.send("Welcome to the world of Orangutans! I was made by `OGaming#7135` Run `o!help` for"
+    try:
+        await guild.default_channel.send("Welcome to the world of Orangutans! I was made by `OGaming#7135` Run `o!help` for"
                                      " help")
+    except discord.Forbidden:
+        return
 
 @bot.command()
 async def load(ctx, extension_name : str):
