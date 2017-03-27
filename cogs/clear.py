@@ -32,16 +32,16 @@ class Clears():
     #     except discord.Forbidden as error:
     #         await self.bot.say("{} does not have permissions".format(self.bot.user.name), delete_after=3)
 
-    @commands.command(aliases=["bclear"])
+    @commands.command(aliases=["bclear"], enabled=False)
     async def botclear(self, ctx, amount=100):
+
+        def check_is_me(msg):
+            return msg.author == self.bot.user
+
         if ctx.message.channel.permissions_for(ctx.message.author).manage_messages:
 
-            def check():
-                def is_me(msg):
-                    return msg.author == self.bot.user
-
             try:
-                deleted = await ctx.channel.purge(check=check(), limit=amount)
+                deleted = await ctx.channel.purge(check=check_is_me(), limit=amount)
                 count = len(deleted)
                 if count == 1:
                     tmp = await ctx.send("Deleted {} message".format(count))
