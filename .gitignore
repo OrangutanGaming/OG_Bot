@@ -1,0 +1,6 @@
+*.log
+/BotIDs.js
+/Rethinkdb/rethinkdb_data
+/Rethinkdb/rethinkdb.exe
+/rethinkdb.ink
+/.idea
