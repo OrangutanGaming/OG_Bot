@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const Colours = require("colors");
+// const Colours = require("colors");
 const BotIDs = require("./BotIDs.js");
 const Raven = require("raven");
 
@@ -8,12 +8,12 @@ client.install();
 const Logger = require("./Logger.js");
 const logger = new Logger(client);
 
+/*
 const bot = new Discord.Client();
 const token = BotIDs.token;
 
 const game = "with OG|o!help";
 const prefixes = ["o!", "o."];
-const prefix = "o.";
 
 bot.on("ready", () => {
     console.log("Logged in as:");
@@ -63,3 +63,24 @@ bot.on("message", message => {
 });
 
 bot.login(token);
+*/
+const Bot = require("./bot.js");
+const bot = new Bot(BotIDs.token, logger, {
+    prefix: BotIDs.prefix,
+    logger,
+    owner: BotIDs.Owner,
+});
+
+/*
+this.onReady() {
+    console.log("Logged in as:");
+    console.log(`Name: ${bot.user.username}#${bot.user.discriminator}`);
+    console.log("ID: " + bot.user.id);
+    bot.user.setGame(game);
+    console.log("Playing".bold, game);
+    console.log(BotIDs.OAuth2);
+
+});
+*/
+
+bot.start();
