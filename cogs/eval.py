@@ -5,6 +5,7 @@ from contextlib import redirect_stdout
 import textwrap
 import traceback
 import BotIDs
+import discord
 
 class Eval():
     def __init__(self, bot):
