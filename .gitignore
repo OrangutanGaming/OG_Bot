@@ -1,11 +1,11 @@
 *.log
 *.pyc
-/BotIDs.py
 /Rethinkdb/rethinkdb_data
 /Rethinkdb/rethinkdb.exe
 /rethinkdb.ink
 /.idea
 __pycache__
 /cogs/utils/extension.py
-client_secret.json
+settings.json
 desc.txt
+client_secret.json
