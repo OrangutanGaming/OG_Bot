@@ -7,38 +7,40 @@ log = logging.getLogger()
 
 DISCORD_BOTS_API = "https://bots.discord.pw/api"
 
-class Stats:
-    # Cog for updating bots.discord.pw bot information.
-    def __init__(self, bot):
-        self.bot = bot
-        self.session = aiohttp.ClientSession()
+if BotIDs.discord_pw:
 
-    def __unload(self):
-        self.bot.loop.create_task(self.session.close())
+    class Stats:
+        # Cog for updating bots.discord.pw bot information.
+        def __init__(self, bot):
+            self.bot = bot
+            self.session = aiohttp.ClientSession()
 
-    async def update(self):
+        def __unload(self):
+            self.bot.loop.create_task(self.session.close())
 
-        payload = json.dumps({
-            "server_count": len(self.bot.guilds)
-        })
+        async def update(self):
 
-        headers = {
-            "authorization": BotIDs.discord_pw,
-            "content-type": "application/json"
-        }
+            payload = json.dumps({
+                "server_count": len(self.bot.guilds)
+            })
 
-        url = "{0}/bots/{1.user.id}/stats".format(DISCORD_BOTS_API, self.bot)
-        async with self.session.post(url, data=payload, headers=headers) as resp:
-            log.info("DBots statistics returned {0.status} for {1}".format(resp, payload))
+            headers = {
+                "authorization": BotIDs.discord_pw,
+                "content-type": "application/json"
+            }
 
-    async def on_server_join(self, server):
-        await self.update()
+            url = "{0}/bots/{1.user.id}/stats".format(DISCORD_BOTS_API, self.bot)
+            async with self.session.post(url, data=payload, headers=headers) as resp:
+                log.info("DBots statistics returned {0.status} for {1}".format(resp, payload))
 
-    async def on_server_remove(self, server):
-        await self.update()
+        async def on_server_join(self, server):
+            await self.update()
 
-    async def on_ready(self):
-        await self.update()
+        async def on_server_remove(self, server):
+            await self.update()
 
-def setup(bot):
-    bot.add_cog(Stats(bot))
+        async def on_ready(self):
+            await self.update()
+
+    def setup(bot):
+        bot.add_cog(Stats(bot))
