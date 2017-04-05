@@ -38,9 +38,8 @@ async def on_ready():
     gamename="with OG|o!help"
     await bot.change_presence(game=discord.Game(name=gamename))
     print("Logged in as")
-    print(bot.user.name)
-    print(bot.user.id)
-    print("------")
+    print("Name: " + str(bot.user))
+    print("ID: " + str(bot.user.id))
     print("Playing", gamename)
     print(BotIDs.URL)
     print("Prefixes: " + Prefixes.Prefix('"'))
@@ -143,6 +142,7 @@ if __name__ == "__main__":
 
 @bot.event
 async def on_command_error(error, ctx):
+    print(f"{ctx.guild.name}, Owner: {str(ctx.guild.owner)}, Author: {str(ctx.message.author)}, Command: {ctx.message.content}")
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.message.channel.send(error)
     elif isinstance(error, commands.errors.CommandNotFound):
@@ -150,6 +150,8 @@ async def on_command_error(error, ctx):
         return
     elif isinstance(error, commands.errors.CommandInvokeError):
         print(error)
+    elif isinstance(error, discord.Forbidden):
+        await ctx.message.channel.send("I do not have permissions")
     else:
         print(error)
 
