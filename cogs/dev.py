@@ -19,8 +19,8 @@ class Devs():
             Msgs=[ctx.message]
             try:
                 for oldRole in self.old:
-                    if discord.utils.get(ctx.message.guild.roles, name=oldRole):
-                        role = discord.utils.get(ctx.message.guild.roles, name=oldRole)
+                    if discord.utils.get(ctx.guild.roles, name=oldRole):
+                        role = discord.utils.get(ctx.guild.roles, name=oldRole)
                         await role.delete()
                         await ctx.send("Removed", delete_after=3)
 
@@ -36,7 +36,7 @@ class Devs():
                         tmp = await ctx.send("Made")
                         Msgs.append(tmp)
                     await asyncio.sleep(1)
-                    await ctx.author.add_roles(discord.utils.get(ctx.message.guild.roles, name=self.current))
+                    await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name=self.current))
                     await tmp.edit(content="Added")
                     success = await ctx.send("Success")
                     Msgs.append(success)
