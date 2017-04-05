@@ -7,7 +7,7 @@ with open(f"{dir}/settings.json") as data_file:
 
 clientID = settings["clientID"]
 token = settings["token"]
-owner = settings["ownerID"]
+ownerID = settings["ownerID"]
 
 dev_id = 150750980097441792
 permissionsURL = "2146958463" # https://finitereality.github.io/permissions/
